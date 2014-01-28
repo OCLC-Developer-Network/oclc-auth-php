@@ -1,0 +1,6 @@
+HTTP/1.1 401 Unauthorized
+Date: Wed, 03 Nov 2010 20:18:59 GMT
+Server: Apache
+Status: 401
+Content-Type: application/json
+WWW-Authenticate: WSKeyV2 error="invalid_token" error_description="request has invalid signature (l0rCvxM4kj+07kpBtZg+jQl3UNzo0jKxMevbC+HmhUE=)"
