@@ -42,9 +42,9 @@ class WSKey
      * @var array $services an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
      * @var string $debugTimestamp a timestamp for debug purposes
      * @var string $debugNonce a nonce for debug purposes
-     * @var \OCLC\User $User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
-     * @var string $BodyHash bodyHash of the request
-     * @var array $AuthParams an array of Authentication name/value pairs example username/testuser
+     * @var \OCLC\User $user an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
+     * @var string $bodyHash bodyHash of the request
+     * @var array $authParams an array of Authentication name/value pairs example username/testuser
      * @var string $mockResponse - file path to mock response
      */
     protected static $validOptions = array(
@@ -64,11 +64,11 @@ class WSKey
 
     private $debugNonce = null;
 
-    private $User = null;
+    private $user = null;
 
-    private $BodyHash = null;
+    private $bodyHash = null;
 
-    private $AuthParams = null;
+    private $authParams = null;
 
     private $mockResponseFilePath = null;
 
@@ -311,10 +311,10 @@ class WSKey
             $nonce = $this->debugNonce;
         }
         
-        $auth_header = "http://www.worldcat.org/wskey/v2/hmac/v1" . " clientId=\"" . $this->key . "\"" . ", timestamp=\"" . $timestamp . "\"" . ", nonce=\"" . $nonce . "\"" . ", signature=\"" . static::signRequest($this->key, $this->secret, $method, $request_url, $this->BodyHash, $timestamp, $nonce) . "\"";
+        $auth_header = "http://www.worldcat.org/wskey/v2/hmac/v1" . " clientId=\"" . $this->key . "\"" . ", timestamp=\"" . $timestamp . "\"" . ", nonce=\"" . $nonce . "\"" . ", signature=\"" . static::signRequest($this->key, $this->secret, $method, $request_url, $this->bodyHash, $timestamp, $nonce) . "\"";
         // If present Add PrincipalID and PrincipalIDNS and any extra parameters on end
-        if (isset($this->User) || isset($this->AuthParams)) {
-            $auth_header .= static::AddAuthParams($this->User, $this->AuthParams);
+        if (isset($this->user) || isset($this->authParams)) {
+            $auth_header .= static::AddAuthParams($this->user, $this->authParams);
         }
         
         return $auth_header;

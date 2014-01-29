@@ -52,6 +52,7 @@ class AccessToken
      * @var string $redirectUri;
      * @var array $scope
      * @var string $accessTokenUrl
+     * @var array $headers
      * @var Guzzle\Http\Client\Request $lastRequest
      * @var OCLC\Auth\WSKey $wskey
      * @var OCLC\User $user
@@ -92,6 +93,8 @@ class AccessToken
     private $redirectUri;
 
     private $scope;
+    
+    private $headers;
 
     private $accessTokenUrl;
 
@@ -326,8 +329,13 @@ class AccessToken
             throw new \LogicException('You must pass a valid User object');
         }
         $this->wskey = $wskey;
-        $this->user = $user;
-        $authorization = $wskey->getHMACSignature('POST', $this->accessTokenUrl, $user);
+        
+        $options = array();
+        if (isset($user)){
+            $this->user = $user;
+            $options['user'] = $this->user;
+        }
+        $authorization = $wskey->getHMACSignature('POST', $this->accessTokenUrl, $options);
         self::requestAccessToken($authorization, $this->accessTokenUrl);
     }
 
@@ -344,9 +352,9 @@ class AccessToken
 
     private function requestAccessToken($authorization, $url)
     {
-        $headers = array();
-        $headers['Authorization'] = $authorization;
-        $headers['Accept'] = 'application/json';
+        $this->headers = array();
+        $this->headers['Authorization'] = $authorization;
+        $this->headers['Accept'] = 'application/json';
         
         $client = new Client();
         $client->setDefaultOption('timeout', 60);
@@ -366,7 +374,7 @@ class AccessToken
             $client->addSubscriber($plugin);
             $plugin->addResponse($this->mockResponseFilePath);
         }
-        $request = $client->createRequest('POST', $url, $headers);
+        $request = $client->createRequest('POST', $url, $this->headers);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         
