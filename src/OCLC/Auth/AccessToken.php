@@ -135,6 +135,16 @@ class AccessToken
     }
 
     /**
+     * Get Error Code
+     *
+     * @return string
+     */
+    public function getErrorCode()
+    {
+        return $this->errorCode;
+    }
+    
+    /**
      * Get Error Message
      *
      * @return string
