@@ -7,7 +7,9 @@ This library is a php wrapper around the Web Service Authentication system used 
 ###Install from Phar
 
 Each release includes an "oclc-auth.phar" file that includes all of the files needed to run the Auth library and all of its dependencies. Simply download the phar and include it in your project.
-
+```php
+require_once('/PATH_TO_THE_PHAR/oclc-auth.phar');
+```
 You can import the various classes into your code
 
 ```php
