@@ -10,16 +10,18 @@ Each release includes an "oclc-auth.phar" file that includes all of the files ne
 
 You can import the various classes into your code
 
-.. code:: php
-
-   use OCLC\Auth\WSKey;
-   use OCLC\User;
+```php
+use OCLC\Auth\WSKey;
+use OCLC\User;
+```
 
 ###Install from source
 
 1) Install dependencies: [Guzzle PHP](http://guzzlephp.org/)
+
 2) Download the files from the src directory in GitHub.
-30 Load the classes in your project. This can be done via an require statement or via an autoloader. The library uses the PSR-0 standard for auto-loading. So Symfony's autoloader will work
+
+3) Load the classes in your project. This can be done via an require statement or via an autoloader. The library uses the PSR-0 standard for auto-loading. So Symfony's autoloader will work
 or if you use Composer for your project you can load the library by listing it in the autoload section of your Composer JSON File. 
 
 
