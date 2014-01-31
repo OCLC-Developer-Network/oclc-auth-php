@@ -23,8 +23,20 @@ use OCLC\User;
 
 2) Download the files from the src directory in GitHub.
 
-3) Load the classes in your project. This can be done via an require statement or via an autoloader. The library uses the PSR-0 standard for auto-loading. So Symfony's autoloader will work
-or if you use Composer for your project you can load the library by listing it in the autoload section of your Composer JSON File. 
+3) Load the classes in your project. This can be done via an require statement or via an autoloader. The library uses the PSR-0 standard for auto-loading.
+If you use Composer for your project you can load the library by listing it in the autoload section of your Composer JSON File. Symfony's autoloader class will work.
+```php
+require_once '/PATH_TO_SYMFONY/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+
+$classLoader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+$classLoader->registerNamespaces(array(
+    'OCLC' => '/PATH_TO_/src',
+    'Guzzle' => '/PATH_TO_/guzzle/src',
+    'Symfony\\Component\\EventDispatcher' => '/PATH_TO_SYMFONY/symfony/event-dispatcher'
+));
+$classLoader->register();
+```
+
 
 
 ## Usage
