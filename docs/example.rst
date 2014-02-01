@@ -16,7 +16,7 @@ Example: Read bib from WorldCat Metadata API
    $url = 'https://worldcat.org/bib/data/823520553?classificationScheme=LibraryOfCongress&holdingLibraryCode=MAIN';
    
    $user = new User('128807', 'principalID', 'principalIDNS');
-   $options = array('User'=> $user);
+   $options = array('user'=> $user);
    
    $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
     
@@ -115,7 +115,7 @@ Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Au
       $user = new User('128807', $AccessToken->getPrincipalID(), $AccessToken->getPrincipalIDNS());
       
       /* Get an HMAC Signature from your WSKey object using the method, url and options array which contains the User object */
-      $options = array('User'=> $user);
+      $options = array('user'=> $user);
       
       $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
        
