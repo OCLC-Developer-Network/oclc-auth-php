@@ -42,7 +42,7 @@ class WSKey
      * @var array $services an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
      * @var string $debugTimestamp a timestamp for debug purposes
      * @var string $debugNonce a nonce for debug purposes
-     * @var \OCLC\User $user an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
+     * @var \OCLC\User $user an /OCLC/User object which contains a valid principalID, principalIDNS and institution ID for a user
      * @var string $bodyHash bodyHash of the request
      * @var array $authParams an array of Authentication name/value pairs example username/testuser
      * @var string $mockResponse - file path to mock response

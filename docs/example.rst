@@ -49,7 +49,7 @@ Example: App protected by an OAuth 2 Explicit Authorization login
     
    session_start();
     
-   $options = array('services' => $services, 'redirectURI' => $redirect_uri);
+   $options = array('services' => $services, 'redirectUri' => $redirect_uri);
    $wskey = new WSKey($key, $secret, $options);
     
    if (empty($_SESSION['AccessToken']) && empty($_GET['code']) {
@@ -92,7 +92,7 @@ Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Au
    session_start();
    
    /* Construct a new WSkey object using the key, secret and an options array that contains the services you want to access and your redirect_uri */ 
-   $options = array('services' => $services, 'redirectURI' => $redirect_uri);
+   $options = array('services' => $services, 'redirectUri' => $redirect_uri);
    $wskey = new WSKey($key, $secret, $options);
    
    /* See if you have an Access Token or Authorization Code already */ 
