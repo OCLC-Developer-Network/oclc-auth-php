@@ -238,7 +238,7 @@ class WSKey
      *            OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
      * @return OCLC/Auth/AccessToken Returns an /OCLC/Auth/AccessToken object when given
      */
-    public function getAccessTokenWithClientCredentials($authenticatingInstitutionId, $contextInstitutionId, $User = null)
+    public function getAccessTokenWithClientCredentials($authenticatingInstitutionId, $contextInstitutionId, $user = null)
     {
         if (empty($authenticatingInstitutionId)) {
             throw new \BadMethodCallException('You must pass an authenticating_institution_id');
@@ -257,7 +257,7 @@ class WSKey
         if (! empty($this->mockResponseFilePath)) {
             $accessToken->setMockResponseFilePath($this->mockResponseFilePath);
         }
-        $accessToken->create($this, $User);
+        $accessToken->create($this, $user);
         return $accessToken;
     }
 

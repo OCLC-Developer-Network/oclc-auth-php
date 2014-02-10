@@ -25,7 +25,7 @@ class AuthCode
      * @var string $redirectUri;
      * @var array $scope
      */
-    private static $authorizationServer = 'https://authn.sd00.worldcat.org/oauth2';
+    public static $authorizationServer = 'https://authn.sd00.worldcat.org/oauth2';
 
     private $clientId;
 
