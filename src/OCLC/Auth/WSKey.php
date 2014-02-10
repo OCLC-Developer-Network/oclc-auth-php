@@ -217,7 +217,8 @@ class WSKey
         $options = array(
             'authenticatingInstitutionId' => $authenticatingInstitutionId,
             'contextInstitutionId' => $contextInstitutionId,
-            'code' => $authCode
+            'code' => $authCode,
+            'redirectUri' => $this->redirectUri
         );
         $accessToken = new AccessToken('authorization_code', $options);
         if (! empty($this->mockResponseFilePath)) {

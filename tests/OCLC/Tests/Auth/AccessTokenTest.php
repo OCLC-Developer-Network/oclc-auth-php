@@ -85,8 +85,7 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         
         // Test all the properties are set from the JSON response
         $this->assertAttributeInternalType('array', 'response', $this->accessToken);
-        // $this->assertAttributeEquals($response, 'response', $this->accessToken);
-        
+                
         $this->assertAttributeInternalType('string', 'accessTokenString', $this->accessToken);
         $this->assertAttributeEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', 'accessTokenString', $this->accessToken);
         

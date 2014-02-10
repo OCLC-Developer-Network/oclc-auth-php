@@ -121,15 +121,21 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         $mock = __DIR__ . '/mocks/oauth_200_response.txt';
         $this->wskey->setMockResponseFilePath($mock);
         
+        $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=authorization_code&code=auth_12384794&authenticatingInstitutionId=128807&contextInstitutionId=128807&redirect_uri=' . urlencode(static::$redirect_uri);
+        
         $AccessToken = $this->wskey->getAccessTokenWithAuthCode('auth_12384794', 128807, 128807);
         $this->assertInstanceOf('OCLC\Auth\AccessToken', $AccessToken);
         
         $this->assertAttributeInternalType('string', 'grantType', $AccessToken);
         $this->assertAttributeEquals('authorization_code', 'grantType', $AccessToken);
         
+        $this->assertAttributeEquals('auth_12384794', 'code', $AccessToken);
+        
         $this->assertAttributeEquals('128807', 'authenticatingInstitutionId', $AccessToken);
         
         $this->assertAttributeEquals('128807', 'contextInstitutionId', $AccessToken);
+        
+        $this->assertAttributeEquals($desiredURL, 'accessTokenUrl', $AccessToken);
     }
 
     /**
@@ -177,7 +183,7 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         $this->wskey->setDebugTimestamp(1386968102);
         
         $options = array(
-            'User' => $User
+            'user' => $User
         );
         
         $this->assertEquals($this->wskey->getHMACSignature('GET', 'http://www.oclc.org/test', $options), $Signature);
@@ -193,8 +199,8 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         $this->wskey->setDebugTimestamp(1386968102);
         
         $options = array(
-            'User' => $User,
-            'AuthParams' => array(
+            'user' => $User,
+            'authParams' => array(
                 'username' => 'testuser'
             )
         );

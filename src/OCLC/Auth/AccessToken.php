@@ -385,8 +385,8 @@ class AccessToken
             $this->errorCode = (string) $error->getResponse()->getStatusCode();
             $this->errorWWWAuthenticate = $error->getResponse()->getWwwAuthenticate();
             $responseBody = json_decode($error->getResponse()->getBody(true), true);
-            if (isset($responseBody['message'])) {
-                $this->errorMessage = $responseBody['message'];
+            if (isset($responseBody['error']['errorMessage'])) {
+                $this->errorMessage =$responseBody['error']['errorMessage'];
             } else {
                 $this->errorMessage = $error->getResponse()->getBody(true);
             }
