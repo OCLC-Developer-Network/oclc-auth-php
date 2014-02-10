@@ -52,9 +52,9 @@ Example: App protected by an OAuth 2 Explicit Authorization login
    $options = array('services' => $services, 'redirectUri' => $redirect_uri);
    $wskey = new WSKey($key, $secret, $options);
     
-   if (empty($_SESSION['AccessToken']) && empty($_GET['code']) {
+   if (empty($_SESSION['AccessToken']) && empty($_GET['code'])) {
       header("Location: " . $wskey->getLoginURL(128807, 128807), 'true', '303');
-   } elseif (isset($_GET['code']) {
+   } elseif (isset($_GET['code'])) {
       $accessToken = $wskey->getAccessTokenWithAuthCode($_GET['code'], 128807, 128807);
     
       $_SESSION['AccessToken'] = $accessToken->getValue();
