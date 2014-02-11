@@ -111,10 +111,10 @@ Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Au
    
       $url = 'https://worldcat.org/bib/data/823520553?classificationScheme=LibraryOfCongress&holdingLibraryCode=MAIN';
       
-      /* Build a user object based on the principalID and principalIDNS from the Access Token */   
-      $user = new User('128807', $AccessToken->getPrincipalID(), $AccessToken->getPrincipalIDNS());
+      /* Retrieve a user object from the Access Token */   
+      $user = $accessToken->getUser();
       
-      /* Get an HMAC Signature from your WSKey object using the method, url and options array which contains the User object */
+      /* Get an HMAC Signature from your WSKey object using the method, url and options array which contains the OCLC\User object */
       $options = array('user'=> $user);
       
       $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);

@@ -231,7 +231,7 @@ class AccessToken
      */
     public function getUser()
     {
-        return $this->User;
+        return $this->user;
     }
 
     /**
@@ -433,7 +433,7 @@ class AccessToken
         }
         $this->type = $this->response['token_type'];
         if (! empty($this->response['principalID']) && ! empty($this->response['principalIDNS'])) {
-            $this->User = new User($this->authenticatingInstitutionId, $this->response['principalID'], $this->response['principalIDNS']);
+            $this->user = new User($this->authenticatingInstitutionId, $this->response['principalID'], $this->response['principalIDNS']);
         }
         
         // Create a Refresh Token object
