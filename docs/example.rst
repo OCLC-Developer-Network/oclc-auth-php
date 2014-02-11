@@ -96,7 +96,7 @@ Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Au
    $wskey = new WSKey($key, $secret, $options);
    
    /* See if you have an Access Token or Authorization Code already */ 
-   if (empty($_SESSION['AccessToken']) && empty($_GET['code']) {
+   if (empty($_SESSION['AccessToken']) && empty($_GET['code'])) {
       /* if you don't have an Access token or Authorization Code, redirect the user to the login URL */
       header("Location: " . $wskey->getLoginURL(128807, 128807), 'true', '303');
    } else {
