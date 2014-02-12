@@ -64,18 +64,18 @@ class AccessTokenTestRefreshToken extends \PHPUnit_Framework_TestCase
         $this->assertAttributeInternalType('string', 'grantType', $this->accessToken);
         $this->assertAttributeEquals('refresh_token', 'grantType', $this->accessToken);
     }
-
+    
+    function testRefreshTokenSet()
+    {
+        $this->assertAttributeInternalType('string', 'refreshToken', $this->accessToken);
+        $this->assertAttributeEquals('rt_239308230', 'refreshToken', $this->accessToken);
+    }
+    
     function testAccess_token_urlSetRefreshToken()
     {
         $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=refresh_token&refresh_token=rt_239308230';
         $this->assertAttributeInternalType('string', 'accessTokenUrl', $this->accessToken);
         $this->assertAttributeEquals($desiredURL, 'accessTokenUrl', $this->accessToken);
-    }
-
-    function testRefreshTokenSet()
-    {
-        $this->assertAttributeInternalType('string', 'refreshToken', $this->accessToken);
-        $this->assertAttributeEquals('rt_239308230', 'refreshToken', $this->accessToken);
     }
 
     /**
