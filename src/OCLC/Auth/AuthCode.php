@@ -82,7 +82,7 @@ class AuthCode
     {
         $loginURL = static::$authorizationServer . '/authorizeCode?client_id=' . $this->clientId;
         $loginURL .= '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId . '&contextInstitutionId=' . $this->contextInstitutionId;
-        $loginURL .= '&redirect_uri=' . urlencode($this->redirectUri) . '&response_type=code' . '&scope=' . implode($this->scope, ',');
+        $loginURL .= '&redirect_uri=' . urlencode($this->redirectUri) . '&response_type=code' . '&scope=' . implode($this->scope, ' ');
         return $loginURL;
     }
 }

@@ -96,7 +96,7 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
      */
     function testGetLoginURL()
     {
-        $url = 'https://authn.sd00.worldcat.org/oauth2/authorizeCode?client_id=test&authenticatingInstitutionId=1&contextInstitutionId=1&redirect_uri=' . urlencode(static::$redirect_uri) . '&response_type=code&scope=WMS_NCIP,WMS_ACQ';
+        $url = 'https://authn.sd00.worldcat.org/oauth2/authorizeCode?client_id=test&authenticatingInstitutionId=1&contextInstitutionId=1&redirect_uri=' . urlencode(static::$redirect_uri) . '&response_type=code&scope=WMS_NCIP WMS_ACQ';
         $authCodeArgs = array(
             $this->wskey->getKey(),
             1,
