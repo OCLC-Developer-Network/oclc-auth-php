@@ -26,9 +26,9 @@ class User
     function __construct($authenticatingInstitutionID, $principalID = null, $principalIDNS = null)
     {
         if (empty($authenticatingInstitutionID)) {
-            Throw new \Exception('You must set a valid authenticating institution ID');
+            Throw new \BadMethodCallException('You must set a valid authenticating institution ID');
         } elseif (empty($principalID) || empty($principalIDNS)) {
-            throw new \Exception('You must set a principalID and principalIDNS');
+            throw new \BadMethodCallException('You must set a principalID and principalIDNS');
         }
         
         $this->authenticatingInstitutionID = $authenticatingInstitutionID;
