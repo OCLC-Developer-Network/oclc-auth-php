@@ -4,7 +4,7 @@
 			"OCLC" : "src"
 		}
 	},
-	"name" : "OCLC/Auth",
+	"name" : "oclc/auth",
 	"version": "1.0",
 	"license" : "Apache-2.0",
 	"require" : {
