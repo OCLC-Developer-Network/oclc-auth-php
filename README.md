@@ -4,6 +4,33 @@ This library is a php wrapper around the Web Service Authentication system used 
 
 ## Installation
 
+##Install via Composer
+The easiest way to install the OCLC Auth library is with Composer. Composer is a PHP dependency management tool that let's you declare the dependencies your project requires and installs them for you.
+
+Sample Composer file
+
+```javascript
+{
+"name" : "My Test App",
+
+	"repositories": [
+	{
+	"type": "git",
+	"url": "https://github.com/OCLC-Developer-Network/oclc-auth-php.git"
+	}
+	],
+	"require" : {
+	"OCLC/Auth" : ">=1.0"
+	}
+}
+```
+
+After you install the OCLC Auth library you need to require Composer's autoloader in your application.
+```php
+require_once('vendor/autoload.php');
+```
+
+
 ###Install from Phar
 
 Each release includes an "oclc-auth.phar" file that includes all of the files needed to run the Auth library and all of its dependencies:
