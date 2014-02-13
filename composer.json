@@ -4,7 +4,7 @@
 			"OCLC" : "src"
 		}
 	},
-	"name" : "OCLC AuthLibrary",
+	"name" : "OCLC/Auth",
 	"license" : "Apache-2.0",
 	"require" : {
 		"php" : ">=5.3.3",
