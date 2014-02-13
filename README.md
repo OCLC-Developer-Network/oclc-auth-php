@@ -11,7 +11,7 @@ Sample Composer file
 
 ```javascript
 {
-"name" : "My Test App",
+"name" : "MyApp",
 
 	"repositories": [
 	{
