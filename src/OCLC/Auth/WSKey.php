@@ -199,10 +199,9 @@ class WSKey
     /**
      * Returns an OCLC/Auth/AccessToken object
      *
-     * @param
-     *            integer authenticating_institution_id the WorldCat Registry ID of the institution that will login the user
-     * @param
-     *            integer context_institution_id the WorldCat Registry ID of the institution whose data will be accessed
+     * @param string authorization code returned as a query parameter
+     * @param integer authenticating_institution_id the WorldCat Registry ID of the institution that will login the user
+     * @param integer context_institution_id the WorldCat Registry ID of the institution whose data will be accessed
      * @return OCLC/Auth/AccessToken Returns an /OCLC/Auth/AccessToken object when given
      */
     public function getAccessTokenWithAuthCode($authCode, $authenticatingInstitutionId, $contextInstitutionId)
@@ -231,12 +230,9 @@ class WSKey
     /**
      * Returns an OCLC/Auth/AccessToken object
      *
-     * @param
-     *            integer authenticating_institution_id the WorldCat Registry ID of the institution that will login the user
-     * @param
-     *            integer context_institution_id the WorldCat Registry ID of the institution whose data will be accessed
-     * @param
-     *            OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
+     * @param integer authenticating_institution_id the WorldCat Registry ID of the institution that will login the user
+     * @param integer context_institution_id the WorldCat Registry ID of the institution whose data will be accessed
+     * @param OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
      * @return OCLC/Auth/AccessToken Returns an /OCLC/Auth/AccessToken object when given
      */
     public function getAccessTokenWithClientCredentials($authenticatingInstitutionId, $contextInstitutionId, $user = null)
@@ -268,16 +264,13 @@ class WSKey
      *
      * Generates a digital signature for a given request according to the OAuth HMAC specification
      *
-     * @param
-     *            string http_method the HTTP method, GET, POST, PUT, DELETE
-     * @param
-     *            string url the URL the request will be made to
+     * @param string http_method the HTTP method, GET, POST, PUT, DELETE
+     * @param string url the URL the request will be made to
      * @param array $options
      *            - User - OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
      *            - BodyHash - bodyHash of the request
      *            - AuthParams - an array of Authentication name/value pairs example username/testuser
-     * @param
-     *            string bodyHash the body of the request. This is optional
+     * @param  string bodyHash the body of the request. This is optional
      * @return string The HMAC Signature that should be sent in the Authorization Header
      */
     public function getHMACSignature($method, $request_url, $options = null)
