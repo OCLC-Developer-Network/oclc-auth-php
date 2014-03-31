@@ -69,6 +69,8 @@ class WSKey
     private $bodyHash = null;
 
     private $authParams = null;
+    
+    private $signedRequest = null;
 
     private $mockResponseFilePath = null;
 
@@ -169,6 +171,18 @@ class WSKey
     public function setDebugNonce($nonce)
     {
         $this->debugNonce = $nonce;
+    }
+    
+    /**
+     * getSignedRequest
+     * Get a signed request
+     * 
+     * @return string of signed request
+     */
+    
+    public function getSignedRequest()
+    {
+        return $this->signedRequest;
     }
 
     /**
@@ -305,7 +319,9 @@ class WSKey
             $nonce = $this->debugNonce;
         }
         
-        $auth_header = "http://www.worldcat.org/wskey/v2/hmac/v1" . " clientId=\"" . $this->key . "\"" . ", timestamp=\"" . $timestamp . "\"" . ", nonce=\"" . $nonce . "\"" . ", signature=\"" . static::signRequest($this->key, $this->secret, $method, $request_url, $this->bodyHash, $timestamp, $nonce) . "\"";
+        $this->signedRequest = static::signRequest($this->key, $this->secret, $method, $request_url, $this->bodyHash, $timestamp, $nonce);
+        
+        $auth_header = "http://www.worldcat.org/wskey/v2/hmac/v1" . " clientId=\"" . $this->key . "\"" . ", timestamp=\"" . $timestamp . "\"" . ", nonce=\"" . $nonce . "\"" . ", signature=\"" . $this->signedRequest . "\"";
         // If present Add PrincipalID and PrincipalIDNS and any extra parameters on end
         if (isset($this->user) || isset($this->authParams)) {
             $auth_header .= static::AddAuthParams($this->user, $this->authParams);
