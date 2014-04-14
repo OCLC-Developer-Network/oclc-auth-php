@@ -1,5 +1,5 @@
 Introduction
-============================================
+============
 
 All of these examples assume the library has been installed via Composer and have the require statement based on that. 
 The require statements for the alternative installation methods are all present but commented out
@@ -40,8 +40,16 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
    $headers = array();
    $headers['Authorization'] = $authorizationHeader;
    $request = $client->createRequest('GET', $url, $headers);
-   $response = $request->send();
-   echo $response->getBody(TRUE);
+   
+   try {
+        $response = $request->send();
+        echo $response->getBody(TRUE);
+   } catch (\Guzzle\Http\Exception\BadResponseException $error) {
+        echo $error->getResponse()->getStatusCode();
+        echo $error->getResponse()->getWwwAuthenticate();
+        echo $error->getResponse()->getBody(true);
+   }
+   
 
 Example: App protected by an OAuth 2 Explicit Authorization login
 =================================================================
