@@ -2,7 +2,7 @@ Introduction
 ============================================
 
 All of these examples assume the library has been installed via Composer and have the require statement based on that. 
-The require statements for the alternative installation methods are all present by commented out
+The require statements for the alternative installation methods are all present but commented out
 
 Example: Read bib from WorldCat Metadata API
 ============================================
@@ -91,8 +91,8 @@ This example shows how to login a user and return the Access Token associated wi
 Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Authorization login
 =================================================================================================
 This example reads a bibliographic record from the WorldCat Metadata API using the WSKey class to 
-# login the user and obtain user identifiers from the Authorization Server
-# generate an HMAC signature for the authorization header.
+- login the user and obtain user identifiers from the Authorization Server
+- generate an HMAC signature for the authorization header.
    
 .. code:: php
 
