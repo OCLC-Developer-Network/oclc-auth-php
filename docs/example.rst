@@ -1,9 +1,23 @@
+## Introduction
+
+All of these examples assume the library has been installed via Composer and have the require statement based on that. 
+The require statements for the alternative installation methods are all present by commented out
+
 Example: Read bib from WorldCat Metadata API
 ============================================
-::
-   This example reads a bibliographic record from the WorldCat Metadata API using the WSKey class to generate an HMAC signature for the authorization header.
+
+This example reads a bibliographic record from the WorldCat Metadata API using the WSKey class to generate an HMAC signature for the authorization header.
 
 .. code:: php
+   require_once('vendor/autoload.php');
+   
+   /*
+   // installed via Phar
+   require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
+   
+   // installed via Zip
+   require_once '/PATH_TO_LIBRARY/autoload.php';
+   */
 
    use OCLC\Auth\WSKey;
    use OCLC\User;
@@ -29,10 +43,18 @@ Example: Read bib from WorldCat Metadata API
 
 Example: App protected by an OAuth 2 Explicit Authorization login
 =================================================================
-::
-   This example shows how to login a user and return the Access Token associated with their login to the screen
+This example shows how to login a user and return the Access Token associated with their login to the screen. It assumes that the Sandbox Institution is being interacted with
    
 .. code:: php
+   require_once('vendor/autoload.php');
+   
+   /*
+   // installed via Phar
+   require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
+   
+   // installed via Zip
+   require_once '/PATH_TO_LIBRARY/autoload.php';
+   */
 
    use OCLC\Auth\WSKey;
    use OCLC\Auth\AccessToken;
@@ -65,12 +87,21 @@ Example: App protected by an OAuth 2 Explicit Authorization login
    
 Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Authorization login
 =================================================================================================
-::
-   This example reads a bibliographic record from the WorldCat Metadata API using the WSKey class to 
-   # login the user and obtain user identifiers from the Authorization Server
-   # generate an HMAC signature for the authorization header.
+This example reads a bibliographic record from the WorldCat Metadata API using the WSKey class to 
+# login the user and obtain user identifiers from the Authorization Server
+# generate an HMAC signature for the authorization header.
    
 .. code:: php
+
+   require_once('vendor/autoload.php');
+   
+   /*
+   // installed via Phar
+   require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
+   
+   // installed via Zip
+   require_once '/PATH_TO_LIBRARY/autoload.php';
+   */
 
    use OCLC\Auth\WSKey;
    use OCLC\Auth\AccessToken;
