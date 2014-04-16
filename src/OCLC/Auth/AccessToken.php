@@ -136,6 +136,14 @@ class AccessToken
     {
         $this->mockResponseFilePath = $mockResponseFilePath;
     }
+    
+    /**
+     * Get Access Token URL
+     * @return string
+     */
+    public function getAccessTokenUrl(){
+        return $this->accessTokenUrl;
+    }
 
     /**
      * Get Error Code
@@ -306,7 +314,7 @@ class AccessToken
             }
         }
         
-        $this->accessTokenUrl = self::getAccessTokenURL();
+        $this->accessTokenUrl = self::buildAccessTokenURL();
     }
 
     /**
@@ -395,9 +403,9 @@ class AccessToken
     }
 
     /**
-     * Get the URL to retrieve the Access Token
+     * Build the URL to retrieve the Access Token
      */
-    private function getAccessTokenURL()
+    private function buildAccessTokenURL()
     {
         $access_token_url = static::$authorizationServer . '/accessToken?grant_type=' . $this->grantType;
         
