@@ -5,7 +5,7 @@ Install from Phar
 =================
 
 Each release includes an "oclc-auth.phar" file that includes all of the files needed to run the Auth library and all of its dependencies:
-- Guzzle for HTTP requests: http://http://docs.guzzlephp.org
+- Guzzle for HTTP requests: http://docs.guzzlephp.org
 - Symfony Class Loader
 - Symfony Event Handler
 
