@@ -11,11 +11,13 @@ Each release includes an "oclc-auth.phar" file that includes all of the files ne
 
 Simply download the phar and include it in your project.
 .. code:: php
+
    require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
 
 You can import the various classes into your code
 
 .. code:: php
+
    use OCLC\Auth\WSKey;
    use OCLC\User;
 
@@ -31,10 +33,12 @@ Simply download it and include the autoloader in your project.
 Example:
 
 .. code:: php
+
    require_once '/PATH_TO_LIBRARY/autoload.php';
 
 You can import the various classes into your code
 
 .. code:: php
+
    use OCLC\Auth\WSKey;
    use OCLC\User;
