@@ -94,4 +94,4 @@ For example if my applicaiton lives at http://library.share.worldcat.org/myApp.p
 If you need a new WSKey with a redirect_uri, this can be requested via Service Config.
 If you already have a WSKey that you want a redirect_uri added to send an email to devnet[at]oclc[dot]org specifying your WorldCat username, the WSKey you want changed and the value of your redirect URI.
 
-[Other Installation Methods](https://github.com/OCLC-Developer-Network/oclc-auth-php/blob/master/docs/otherInstallMethods.rst)
+##[Other Installation Methods](https://github.com/OCLC-Developer-Network/oclc-auth-php/blob/master/docs/otherInstallMethods.rst)
