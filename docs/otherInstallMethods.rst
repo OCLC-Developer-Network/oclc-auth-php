@@ -10,6 +10,7 @@ Each release includes an "oclc-auth.phar" file that includes all of the files ne
 - Symfony Event Handler
 
 Simply download the phar and include it in your project.
+
 .. code:: php
 
    require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
