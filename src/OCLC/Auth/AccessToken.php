@@ -77,7 +77,9 @@ class AccessToken
         'contextInstitutionId',
         'redirectUri',
         'code',
-        'refreshToken'
+        'refreshToken',
+        'accessTokenString',
+        'expiresAt'
     );
 
     public static $validGrantTypes = array(
@@ -282,31 +284,26 @@ class AccessToken
      *            -- refresh_token option must be set
      * @param array $options
      *            - an associative array of options for constructing the Access Token. Possible indexes
-     *            - $scope - array of scopes
-     *            - $authenticatingInstitutionId
-     *            - $contextInstitutionId
-     *            - $redirect_uri
-     *            - $code
-     *            - $refresh_token
+     *            - scope - array of scopes
+     *            - authenticatingInstitutionId
+     *            - contextInstitutionId
+     *            - redirect_uri
+     *            - code
+     *            - refresh_token
+     *            - accessTokenString
+     *            - expiresAt
      */
     function __construct($grantType, $options)
     {
         if (empty($grantType) || ! in_array($grantType, static::$validGrantTypes)) {
             throw new \LogicException('You must pass a valid grant type to construct an Access Token');
-        }
-        $this->grantType = $grantType;
-        
-        if (empty($options) || ! is_array($options)) {
+        }elseif (empty($options) || ! is_array($options)) {
             throw new \BadMethodCallException('You must pass at least one option to construct an Access Token');
+        }elseif (!empty($options['accessTokenString']) && empty($options['expiresAt'])){
+            throw new \BadMethodCallException('You must pass an expires_at when passing an Access Token string');
         }
         
-        if ($this->grantType == 'authorization_code' && (empty($options['code']) || empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']))) {
-            throw new \BadMethodCallException('You must pass the options: code, redirect_uri, scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the authorization_code grant type');
-        } elseif ($this->grantType == 'client_credentials' && (empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']) || empty($options['scope']))) {
-            throw new \BadMethodCallException('You must pass the options: scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the client_credential grant type');
-        } elseif ($this->grantType == 'refresh_token' && empty($options['refreshToken'])) {
-            throw new \BadMethodCallException('You must pass the option refreshToken to construct an Access Token using the refresh_token grant type');
-        }
+        $this->grantType = $grantType;
         
         foreach ($options as $name => $value) {
             if (in_array($name, static::$validOptions)) {
@@ -314,7 +311,18 @@ class AccessToken
             }
         }
         
-        $this->accessTokenUrl = self::buildAccessTokenURL();
+        if (empty($this->accessTokenString)){
+        
+            if ($this->grantType == 'authorization_code' && (empty($options['code']) || empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']))) {
+                throw new \BadMethodCallException('You must pass the options: code, redirect_uri, scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the authorization_code grant type');
+            } elseif ($this->grantType == 'client_credentials' && (empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']) || empty($options['scope']))) {
+                throw new \BadMethodCallException('You must pass the options: scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the client_credential grant type');
+            } elseif ($this->grantType == 'refresh_token' && empty($options['refreshToken'])) {
+                throw new \BadMethodCallException('You must pass the option refreshToken to construct an Access Token using the refresh_token grant type');
+            }
+            
+            $this->accessTokenUrl = self::buildAccessTokenURL();
+        }
     }
 
     /**
