@@ -31,20 +31,20 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     function testauthenticatingInstitutionIDSet()
     {
-        $this->assertAttributeInternalType('string', 'authenticatingInstitutionID', $this->refreshToken);
-        $this->assertAttributeEquals('128807', 'authenticatingInstitutionID', $this->refreshToken);
+        $this->assertAttributeInternalType('string', 'authenticatingInstitutionID', $this->user);
+        $this->assertAttributeEquals('128807', 'authenticatingInstitutionID', $this->user);
     }
     
     function testPrincipalIDSet()
     {
-        $this->assertAttributeInternalType('integer', 'principalID', $this->refreshToken);
-        $this->assertAttributeEquals('principalID', 'principalID', $this->refreshToken);
+        $this->assertAttributeInternalType('string', 'principalID', $this->user);
+        $this->assertAttributeEquals('principalID', 'principalID', $this->user);
     }
     
     function testPrincipalIDNSSet()
     {
-        $this->assertAttributeInternalType('string', 'principalIDNS', $this->refreshToken);
-        $this->assertAttributeEquals('principalIDNS', 'principalIDNS', $this->refreshToken);
+        $this->assertAttributeInternalType('string', 'principalIDNS', $this->user);
+        $this->assertAttributeEquals('principalIDNS', 'principalIDNS', $this->user);
     }
     
     /**
@@ -88,7 +88,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     function testNoPrincipalID()
     {
-        $user = new User('128807', ' ', 'principalIDNS');
+        $user = new User('128807', '', 'principalIDNS');
     }
     
     /**
@@ -97,7 +97,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     function testNoPrincipalIDNS()
     {
-        $user = new User('128807', 'principalID', ' ');
+        $user = new User('128807', 'principalID', '');
     }
     
 }
