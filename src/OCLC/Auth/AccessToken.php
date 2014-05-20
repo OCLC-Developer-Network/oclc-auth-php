@@ -204,7 +204,7 @@ class AccessToken
     {
         if (!empty($this->errorCode)) {
             throw new \LogicException($this->errorCode . ' ' . $this->errorMessage);
-        }elseif (self::isExpired() && $this->refreshToken->isExpired()) {
+        }elseif (self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
             throw new \LogicException('Sorry you do not have a valid Access Token');
         } elseif (self::isExpired()) {
             self::refreshToken();

@@ -10,7 +10,4 @@ Content-Type: application/json
 "principalID":"cpe4c7f6-f5a4-41fa-35c9-9d59443f544p",
 "principalIDNS":"urn:oclc:platform:128807",
 "contextInstitutionId": "128807",
-"expires_at": "2018-08-23 18:45:29Z",
-"refresh_token": "rt_ZrigZXPJQnB1l2DxF1dCratGNxUHpGLjMw8z",
-"refresh_token_expires_in": "604799",
-"refresh_token_expires_at": "2018-08-30 18:25:29Z"}
+"expires_at": "2018-08-23 18:45:29Z"}

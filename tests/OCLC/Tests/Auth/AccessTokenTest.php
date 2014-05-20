@@ -93,7 +93,7 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals('3599', 'expiresIn', $this->accessToken);
         
         $this->assertAttributeInternalType('string', 'expiresAt', $this->accessToken);
-        $this->assertAttributeEquals('2013-08-23 18:45:29Z', 'expiresAt', $this->accessToken);
+        $this->assertAttributeEquals('2018-08-23 18:45:29Z', 'expiresAt', $this->accessToken);
         
         $this->assertAttributeInternalType('string', 'contextInstitutionId', $this->accessToken);
         $this->assertAttributeEquals('128807', 'contextInstitutionId', $this->accessToken);
@@ -102,7 +102,36 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         
         $this->assertInstanceOf('OCLC\User', $this->accessToken->getUser());
         
-        $this->assertTrue($this->accessToken->isExpired());
+        $this->assertFalse($this->accessToken->isExpired());
+        $this->assertEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', $this->accessToken->getValue());
+    }
+    
+    function testProcessGoodAuthServerResponseNoRefreshToken()
+    {
+        $mock = __DIR__ . '/mocks/oauth_200_responseNoRefreshToken.txt';
+        $this->accessToken->setMockResponseFilePath($mock);
+    
+        $this->accessToken->create($this->wskey);
+    
+        // Test all the properties are set from the JSON response
+        $this->assertAttributeInternalType('array', 'response', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'accessTokenString', $this->accessToken);
+        $this->assertAttributeEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', 'accessTokenString', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'expiresIn', $this->accessToken);
+        $this->assertAttributeEquals('3599', 'expiresIn', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'expiresAt', $this->accessToken);
+        $this->assertAttributeEquals('2018-08-23 18:45:29Z', 'expiresAt', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'contextInstitutionId', $this->accessToken);
+        $this->assertAttributeEquals('128807', 'contextInstitutionId', $this->accessToken);
+    
+        $this->assertInstanceOf('OCLC\User', $this->accessToken->getUser());
+    
+        $this->assertFalse($this->accessToken->isExpired());
+        $this->assertEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', $this->accessToken->getValue());
     }
     
     /* Negative Test Cases */
