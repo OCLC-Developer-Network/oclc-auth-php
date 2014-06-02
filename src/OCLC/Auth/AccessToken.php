@@ -314,7 +314,7 @@ class AccessToken
         if (empty($this->accessTokenString)){
         
             if ($this->grantType == 'authorization_code' && (empty($options['code']) || empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']))) {
-                throw new \BadMethodCallException('You must pass the options: code, redirect_uri, scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the authorization_code grant type');
+                throw new \BadMethodCallException('You must pass the options: code, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the authorization_code grant type');
             } elseif ($this->grantType == 'client_credentials' && (empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']) || empty($options['scope']))) {
                 throw new \BadMethodCallException('You must pass the options: scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the client_credential grant type');
             } elseif ($this->grantType == 'refresh_token' && empty($options['refreshToken'])) {
@@ -400,11 +400,12 @@ class AccessToken
         } catch (\Guzzle\Http\Exception\BadResponseException $error) {
             $this->errorCode = (string) $error->getResponse()->getStatusCode();
             $this->errorWWWAuthenticate = $error->getResponse()->getWwwAuthenticate();
-            $responseBody = json_decode($error->getResponse()->getBody(true), true);
-            if (isset($responseBody['error']['errorMessage'])) {
-                $this->errorMessage =$responseBody['error']['errorMessage'];
+            $this->response = $error->getResponse()->getBody(true);
+            $responseBody = json_decode($this->response, true);
+            if (isset($responseBody['message'])) {
+                $this->errorMessage = $responseBody['message'];
             } else {
-                $this->errorMessage = $error->getResponse()->getBody(true);
+                $this->errorMessage = $this->response;
             }
         }
         static::$lastRequest = $history->getLastRequest();
