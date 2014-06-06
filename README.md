@@ -10,17 +10,18 @@ Sample Composer file
 
 ```javascript
 {
-"name" : "MyApp",
-
-	"repositories": [
-	{
-	"type": "git",
-	"url": "https://github.com/OCLC-Developer-Network/oclc-auth-php.git"
-	}
-	],
-	"require" : {
-	"OCLC/Auth" : ">=1.0"
-	}
+  "name" : "MyApp",
+  "repositories": 
+  [
+    {
+      "type": "git",
+      "url": "https://github.com/OCLC-Developer-Network/oclc-auth-php.git"
+    }
+  ],
+  "require" : 
+  {
+    "OCLC/Auth" : ">=1.0"
+  }
 }
 ```
 
@@ -47,43 +48,46 @@ $ php composer.phar install
 #### Step 3: Include the libraries in your code
 To start using this library you need to include the OCLC Auth library in your code. Add the following to the top of your file:
 ```php
-<?php
 require_once('vendor/autoload.php');
 ```
 
-Basic Example Obtain an HMAC Signature looks like this
-```php
-   require_once('vendor/autoload.php');
+Basic Example: Use an HMAC Signature on a request to the [WorldCat Metadata API](http://www.oclc.org/developer/develop/web-services/worldcat-metadata-api.en.html)
 
-   use OCLC\Auth\WSKey;
-   use OCLC\User;
-   use Guzzle\Http\Client;
-   
-   $key = 'api-key';
-   $secret = 'api-key-secret';
-   $wskey = new WSKey($key, $secret);
-   
-   $url = 'https://worldcat.org/bib/data/823520553?classificationScheme=LibraryOfCongress&holdingLibraryCode=MAIN';
-   
-   $user = new User('128807', 'principalID', 'principalIDNS');
-   $options = array('user'=> $user);
-   
-   $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
-    
-   $client = new Client();
-   $headers = array();
-   $headers['Authorization'] = $authorizationHeader;
-   $request = $client->createRequest('GET', $url, $headers);
-   
-   try {
-        $response = $request->send();
-        echo $response->getBody(TRUE);
-   } catch (\Guzzle\Http\Exception\BadResponseException $error) {
-        echo $error->getResponse()->getStatusCode();
-        echo $error->getResponse()->getWwwAuthenticate();
-        echo $error->getResponse()->getBody(true);
-   }
-   
+```php
+<?php
+require_once('vendor/autoload.php');
+
+use OCLC\Auth\WSKey;
+use OCLC\User;
+use Guzzle\Http\Client;
+
+$key = 'api-key';
+$secret = 'api-key-secret';
+$wskey = new WSKey($key, $secret);
+
+$url = 'https://worldcat.org/bib/data/823520553?classificationScheme=LibraryOfCongress&holdingLibraryCode=MAIN';
+
+$user = new User('128807', 'principalID', 'principalIDNS');
+$options = array('user'=> $user);
+
+$authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
+
+$client = new Client();
+$headers = array();
+$headers['Authorization'] = $authorizationHeader;
+$request = $client->createRequest('GET', $url, $headers);
+
+try {
+    $response = $request->send();
+    echo $response->getBody(TRUE);
+} 
+catch (\Guzzle\Http\Exception\BadResponseException $error) {
+  
+    echo $error->getResponse()->getStatusCode();
+    echo $error->getResponse()->getWwwAuthenticate();
+    echo $error->getResponse()->getBody(true);
+}
+?>   
 ```
 
 [Other Examples](https://github.com/OCLC-Developer-Network/oclc-auth-php/blob/master/docs/example.rst)
