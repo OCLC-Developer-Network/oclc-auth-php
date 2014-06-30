@@ -10,17 +10,18 @@ Sample Composer file
 
 ```javascript
 {
-"name" : "MyApp",
-
-	"repositories": [
-	{
-	"type": "git",
-	"url": "https://github.com/OCLC-Developer-Network/oclc-auth-php.git"
-	}
-	],
-	"require" : {
-	"OCLC/Auth" : ">=1.0"
-	}
+  "name" : "MyApp",
+  "repositories": 
+  [
+    {
+      "type": "git",
+      "url": "https://github.com/OCLC-Developer-Network/oclc-auth-php.git"
+    }
+  ],
+  "require" : 
+  {
+    "OCLC/Auth" : ">=1.0"
+  }
 }
 ```
 
@@ -47,13 +48,10 @@ $ php composer.phar install
 #### Step 3: Include the libraries in your code
 To start using this library you need to include the OCLC Auth library in your code. Add the following to the top of your file:
 ```php
-<?php
 require_once('vendor/autoload.php');
 ```
 
-Basic Example Obtain an HMAC Signature looks like this
-```php
-   require_once('vendor/autoload.php');
+Basic Example: Use an HMAC Signature on a request to the [WorldCat Metadata API](http://www.oclc.org/developer/develop/web-services/worldcat-metadata-api.en.html)
 
    use OCLC\Auth\WSKey;
    use OCLC\User;
@@ -84,7 +82,6 @@ Basic Example Obtain an HMAC Signature looks like this
         echo $error->getResponse()->getWwwAuthenticate();
         echo $error->getResponse()->getBody(true);
    }
-   
 ```
 
 [Other Examples](https://github.com/OCLC-Developer-Network/oclc-auth-php/blob/master/docs/example.rst)
