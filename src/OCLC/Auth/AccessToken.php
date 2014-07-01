@@ -43,7 +43,9 @@ class AccessToken
      *        
      *         See the OCLC/Auth documentation for examples.
      *        
-     * @var array static $authorization Server
+     * @var array static $authorizationServer
+     * @var binary static $testServer
+     * @var string static $userAgent
      * @var array static $validOptions
      * @var array static $validGrantTypes
      * @var string $grant_type
@@ -53,9 +55,9 @@ class AccessToken
      * @var array $scope
      * @var string $accessTokenUrl
      * @var array $headers
-     * @var Guzzle\Http\Client\Request $lastRequest
      * @var OCLC\Auth\WSKey $wskey
      * @var OCLC\User $user
+     * @var \Guzzle\Http\Exception\BadResponseException $error
      * @var string $errorCode
      * @var string $errorWWWAuthenticate
      * @var string $errorMessage
@@ -66,10 +68,11 @@ class AccessToken
      * @var integer $expiresIn
      * @var string $expiresAt
      * @var OCLC\Auth\RefreshToken $refreshToken
-     * @var string $mockResponseFilePath - file path to mock response
      *     
      */
     public static $authorizationServer = 'https://authn.sd00.worldcat.org/oauth2';
+    public static $testServer = FALSE;
+    public static $userAgent = 'oclc-auth-php';
 
     public static $validOptions = array(
         'scope',
@@ -123,21 +126,6 @@ class AccessToken
     private $expiresAt = null;
 
     private $refreshToken = null;
-
-    private $mockResponseFilePath = null;
-
-    /**
-     * Set Mock Response File path
-     * sets the filename of a mock response so that testing can be performed
-     *
-     * @param
-     *            $mockResponseFilePath
-     *            
-     */
-    public function setMockResponseFilePath($mockResponseFilePath)
-    {
-        $this->mockResponseFilePath = $mockResponseFilePath;
-    }
     
     /**
      * Get Access Token URL
@@ -367,48 +355,40 @@ class AccessToken
     }
 
     private function requestAccessToken($authorization, $url)
-    {
-        $this->headers = array();
-        $this->headers['Authorization'] = $authorization;
-        $this->headers['Accept'] = 'application/json';
+    {   
+        $guzzleOptions = array(
+            'headers' => array(
+                'Authorization' => $authorization,
+                'Accept' => 'application/json',
+                'User-Agent' => static::$userAgent
+            ),
+            'allow_redirects' => array(
+        	   'strict' => true
+            ),
+            'timeout' => 60
+        );
         
-        $client = new Client();
-        $client->setDefaultOption('timeout', 60);
-        $client->setDefaultOption('redirect.strict', true);
+        if (static::$testServer){
+            $guzzleOptions['verify'] = false;
+        }
         
-        $history = new HistoryPlugin();
-        $history->setLimit(1);
-        $client->addSubscriber($history);
-        if (defined('USER_AGENT')) {
-            $userAgent = USER_AGENT;
-        } else {
-            $userAgent = 'OCLC Platform PHP Library';
+        if (!class_exists('Guzzle')) {
+            \Guzzle\Http\StaticClient::mount();
         }
-        $client->setUserAgent($userAgent);
-        if (isset($this->mockResponseFilePath)) {
-            $plugin = new MockPlugin();
-            $client->addSubscriber($plugin);
-            $plugin->addResponse($this->mockResponseFilePath);
-        }
-        $request = $client->createRequest('POST', $url, $this->headers);
-        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
-        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         
         try {
-            $response = $request->send();
+            $response = \Guzzle::post($url, $guzzleOptions);
             self::parseTokenResponse($response->json());
         } catch (\Guzzle\Http\Exception\BadResponseException $error) {
             $this->errorCode = (string) $error->getResponse()->getStatusCode();
-            $this->errorWWWAuthenticate = $error->getResponse()->getWwwAuthenticate();
             $this->response = $error->getResponse()->getBody(true);
             $responseBody = json_decode($this->response, true);
-            if (isset($responseBody['message'])) {
-                $this->errorMessage = $responseBody['message'];
+            if (isset($responseBody['error']['errorMessage'])) {
+                $this->errorMessage = $responseBody['error']['errorMessage'];
             } else {
                 $this->errorMessage = $this->response;
             }
         }
-        static::$lastRequest = $history->getLastRequest();
     }
 
     /**

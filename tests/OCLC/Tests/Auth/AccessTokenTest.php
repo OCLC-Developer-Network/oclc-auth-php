@@ -62,24 +62,14 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeInternalType('string', 'grantType', $this->accessToken);
         $this->assertAttributeEquals('client_credentials', 'grantType', $this->accessToken);
     }
+    
+    /**
+     * @vcr accessTokenWithRefreshTokenSuccess
+     * testProcessGoodAuthServerResponse
+     */
 
     function testProcessGoodAuthServerResponse()
     {
-        $mock = __DIR__ . '/mocks/oauth_200_response.txt';
-        $this->accessToken->setMockResponseFilePath($mock);
-        
-        $response = json_decode('{
-"access_token":"tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW",
-"token_type":"bearer",
-"expires_in":"3599",
-"principalID":"cpe4c7f6-f5a4-41fa-35c9-9d59443f544p",
-"principalIDNS":"urn:oclc:platform:128807"
-"contextInstitutionId": "128807",
-"expires_at": "2013-08-23 18:45:29Z"
-"refresh_token": "rt_ZrigZXPJQnB1l2DxF1dCratGNxUHpGLjMw8z",
-"refresh_token_expires_in": "604799",
-"refresh_token_expires_at": "2013-08-30 18:25:29Z"
-}', true);
         
         $this->accessToken->create($this->wskey);
         
@@ -106,10 +96,13 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', $this->accessToken->getValue());
     }
     
+    /**
+     * @vcr accessTokenSuccess
+     * testProcessGoodAuthServerResponseNoRefreshToken
+     */
+    
     function testProcessGoodAuthServerResponseNoRefreshToken()
     {
-        $mock = __DIR__ . '/mocks/oauth_200_responseNoRefreshToken.txt';
-        $this->accessToken->setMockResponseFilePath($mock);
     
         $this->accessToken->create($this->wskey);
     
@@ -187,23 +180,25 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->accessToken->create($this->wskey, $User);
     }
 
+    /**
+     * @vcr accessTokenFailure401
+     * testProcessBadAuthServerResponse401
+     */
     function testProcessBadAuthServerResponse401()
     {
-        $mock = __DIR__ . '/mocks/oauth_401_response.txt';
-        $this->accessToken->setMockResponseFilePath($mock);
         $this->accessToken->create($this->wskey);
         
         $this->assertAttributeInternalType('string', 'errorCode', $this->accessToken);
         $this->assertAttributeEquals('401', 'errorCode', $this->accessToken);
-        
-        $this->assertAttributeInternalType('string', 'errorWWWAuthenticate', $this->accessToken);
-        $this->assertAttributeEquals('WSKeyV2 error="invalid_token" error_description="request has invalid signature (l0rCvxM4kj+07kpBtZg+jQl3UNzo0jKxMevbC+HmhUE=)"', 'errorWWWAuthenticate', $this->accessToken);
     }
+    
+    /**
+     * @vcr accessTokenFailure403
+     * testProcessBadAuthServerResponse403
+     */
 
     function testProcessBadAuthServerResponse403()
     {
-        $mock = __DIR__ . '/mocks/oauth_403_response.txt';
-        $this->accessToken->setMockResponseFilePath($mock);
         $this->accessToken->create($this->wskey);
         
         $this->assertAttributeInternalType('string', 'errorCode', $this->accessToken);

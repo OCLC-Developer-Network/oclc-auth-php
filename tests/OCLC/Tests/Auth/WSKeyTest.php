@@ -127,13 +127,11 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @vcr accessTokenWithRefreshTokenViaAuthCodeSuccess
      * getAccessTokenWithAuthCode should return a valid Access Token object
      */
     function testgetAccessTokenWithAuthCode()
     {
-        $mock = __DIR__ . '/mocks/oauth_200_response.txt';
-        $this->wskey->setMockResponseFilePath($mock);
-        
         $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=authorization_code&code=auth_12384794&authenticatingInstitutionId=128807&contextInstitutionId=128807&redirect_uri=' . urlencode(static::$redirect_uri);
         
         $AccessToken = $this->wskey->getAccessTokenWithAuthCode('auth_12384794', 128807, 128807);
@@ -152,13 +150,11 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @vcr accessTokenWithRefreshTokenSuccess
      * getAccessTokenWithClientCredentials should return a valid Access Token object
      */
     function testgetAccessTokenWithClientCredentials()
-    {
-        $mock = __DIR__ . '/mocks/oauth_200_response.txt';
-        $this->wskey->setMockResponseFilePath($mock);
-        
+    {        
         $AccessToken = $this->wskey->getAccessTokenWithClientCredentials(128807, 128807, $this->user);
         $this->assertInstanceOf('OCLC\Auth\AccessToken', $AccessToken);
         

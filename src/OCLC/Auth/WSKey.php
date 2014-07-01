@@ -35,6 +35,8 @@ class WSKey
      *        
      *         See the OCLC/Auth documentation for examples.
      *        
+     * @var binary static $testServer
+     * @var string static $userAgent
      * @var array static $validOptions the option values valid for constructor
      * @var string $key the hashed string that represents your API key
      * @var string $secret the secret used when generating digital signatures
@@ -45,8 +47,11 @@ class WSKey
      * @var \OCLC\User $user an /OCLC/User object which contains a valid principalID, principalIDNS and institution ID for a user
      * @var string $bodyHash bodyHash of the request
      * @var array $authParams an array of Authentication name/value pairs example username/testuser
-     * @var string $mockResponse - file path to mock response
      */
+    
+    public static $testServer = FALSE;
+    public static $userAgent = 'oclc-auth-php';
+    
     protected static $validOptions = array(
         'redirectUri',
         'services'
@@ -71,8 +76,6 @@ class WSKey
     private $authParams = null;
     
     private $signedRequest = null;
-
-    private $mockResponseFilePath = null;
 
     /**
      * Construct a new Web Service key for use when authenticating to OCLC Web Services.
@@ -186,17 +189,6 @@ class WSKey
     }
 
     /**
-     * Set the filepath for a mock response from the Authorization Server.
-     * For debugging purposes
-     *
-     * @param string $mockResponseFilePath            
-     */
-    public function setMockResponseFilePath($mockResponseFilePath)
-    {
-        $this->mockResponseFilePath = $mockResponseFilePath;
-    }
-
-    /**
      * Return the login URL used with OCLC's OAuth 2 implementation of the Explicit Authorization Flow.
      *
      * @link http://www.oclc.org/developer/platform/explicit-authorization-code Explicit Auth Documentation on the OCLC Developer Network.
@@ -233,10 +225,9 @@ class WSKey
             'code' => $authCode,
             'redirectUri' => $this->redirectUri
         );
+        AccessToken::$userAgent = static::$userAgent;
+        AccessToken::$testServer = static::$testServer;
         $accessToken = new AccessToken('authorization_code', $options);
-        if (! empty($this->mockResponseFilePath)) {
-            $accessToken->setMockResponseFilePath($this->mockResponseFilePath);
-        }
         $accessToken->create($this);
         return $accessToken;
     }
@@ -264,10 +255,9 @@ class WSKey
             'contextInstitutionId' => $contextInstitutionId,
             'scope' => $this->services
         );
+        AccessToken::$userAgent = static::$userAgent;
+        AccessToken::$testServer = static::$testServer;
         $accessToken = new AccessToken('client_credentials', $options);
-        if (! empty($this->mockResponseFilePath)) {
-            $accessToken->setMockResponseFilePath($this->mockResponseFilePath);
-        }
         $accessToken->create($this, $user);
         return $accessToken;
     }
@@ -415,25 +405,25 @@ class WSKey
      * @param array $AuthParams            
      * @return string
      */
-    private static function AddAuthParams($User, $AuthParams)
+    private static function AddAuthParams($user, $authParams)
     {
         $authValuePairs = null;
-        if (count($AuthParams) > 0 || ! empty($User)) {
-            if (empty($AuthParams)) {
-                $AuthParams = array();
+        if (count($authParams) > 0 || ! empty($user)) {
+            if (empty($authParams)) {
+                $authParams = array();
             }
             
-            if (isset($User)) {
-                $UserParams = array(
-                    'principalID' => $User->getPrincipalId(),
-                    'principalIDNS' => $User->getPrincipalIDNS()
+            if (isset($user)) {
+                $userParams = array(
+                    'principalID' => $user->getPrincipalId(),
+                    'principalIDNS' => $user->getPrincipalIDNS()
                 );
-                $AuthParams = array_merge($UserParams, $AuthParams);
+                $authParams = array_merge($userParams, $authParams);
             }
             
             $authValuePairs .= ', ';
             $prefix = '';
-            foreach ($AuthParams as $key => $value) {
+            foreach ($authParams as $key => $value) {
                 $authValuePairs .= $prefix . $key . "=\"" . $value . "\"";
                 $prefix = ', ';
             }
