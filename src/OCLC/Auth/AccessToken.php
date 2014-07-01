@@ -383,7 +383,9 @@ class AccessToken
             $this->errorCode = (string) $error->getResponse()->getStatusCode();
             $this->response = $error->getResponse()->getBody(true);
             $responseBody = json_decode($this->response, true);
-            if (isset($responseBody['error']['errorMessage'])) {
+            if (isset($responseBody['message'])){
+                $this->errorMessage = $responseBody['message'];
+            } elseif (isset($responseBody['error']['errorMessage'])) {
                 $this->errorMessage = $responseBody['error']['errorMessage'];
             } else {
                 $this->errorMessage = $this->response;
