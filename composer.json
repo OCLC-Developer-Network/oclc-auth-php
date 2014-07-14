@@ -5,7 +5,7 @@
 		}
 	},
 	"name" : "OCLC/Auth",
-	"version" : "1.2",
+	"version" : "1.2.2",
 	"license" : "Apache-2.0",
 	"require" : {
 		"php" : ">=5.3.3",
