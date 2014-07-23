@@ -197,7 +197,7 @@ class AccessToken
         }elseif (self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
             throw new \LogicException('Sorry you do not have a valid Access Token');
         } elseif (self::isExpired()) {
-            self::refreshToken();
+            self::refresh();
         }
         return $this->accessTokenString;
     }
