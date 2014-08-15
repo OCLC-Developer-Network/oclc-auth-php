@@ -75,4 +75,9 @@ class RefreshTokenTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->refreshToken->isExpired());
     }
+    
+    function testConstructRefreshTokenZeroExpiresIn(){
+        $refreshToken = new refreshToken('rt_1234567', '0', '2013-08-23 18:45:29Z');
+        $this->assertInstanceOf('OCLC\Auth\RefreshToken', $refreshToken);
+    }
 }
