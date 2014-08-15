@@ -351,6 +351,12 @@ class AccessToken
         $this->grantType = 'refresh_token';
         $this->accessTokenUrl = self::getAccessTokenURL();
         $authorization = $this->wskey->getHMACSignature('POST', $this->accessTokenUrl);
+        
+        $this->accessTokenString = null;
+        $this->expiresIn = null;
+        $this->expiresAt = null;
+        $this->errorCode = null;
+        $this->errorMessage = null;
         self::requestAccessToken($authorization, $this->accessTokenUrl);
     }
 
