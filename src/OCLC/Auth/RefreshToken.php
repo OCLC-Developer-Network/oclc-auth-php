@@ -78,7 +78,7 @@ class RefreshToken
     public function isExpired()
     {
         date_default_timezone_set('UTC');
-        if (strtotime($this->expiresAt) < time()) {
+        if (strtotime($this->expiresAt) <= time()) {
             $status = TRUE;
         } else {
             $status = FALSE;
