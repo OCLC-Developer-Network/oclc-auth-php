@@ -277,7 +277,7 @@ class AccessToken
      *            - contextInstitutionId
      *            - redirect_uri
      *            - code
-     *            - refresh_token
+     *            - refreshToken - refreshToken object
      *            - accessTokenString
      *            - expiresAt
      */
@@ -349,7 +349,7 @@ class AccessToken
             throw new \LogicException('AccessToken must have an associated WSKey Property');
         }
         $this->grantType = 'refresh_token';
-        $this->accessTokenUrl = self::getAccessTokenURL();
+        $this->accessTokenUrl = self::buildAccessTokenURL();
         $authorization = $this->wskey->getHMACSignature('POST', $this->accessTokenUrl);
         
         $this->accessTokenString = null;
