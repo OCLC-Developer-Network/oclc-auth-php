@@ -190,13 +190,13 @@ class AccessToken
      *
      * @return string
      */
-    public function getValue()
+    public function getValue($autoRefresh = true)
     {
         if (!empty($this->errorCode)) {
             throw new \LogicException($this->errorCode . ' ' . $this->errorMessage);
-        }elseif (self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
+        }elseif ($autoRefresh && self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
             throw new \LogicException('Sorry you do not have a valid Access Token');
-        } elseif (self::isExpired()) {
+        } elseif ($autoRefresh && self::isExpired()) {
             self::refresh();
         }
         return $this->accessTokenString;

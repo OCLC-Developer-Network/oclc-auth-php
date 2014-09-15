@@ -103,7 +103,6 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
     
     function testProcessAccessTokenExpired()
     {
-    
         $this->accessToken->create($this->wskey);
     
         // Test all the properties are set from the JSON response
@@ -126,7 +125,10 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('OCLC\User', $this->accessToken->getUser());
     
         $this->assertTrue($this->accessToken->isExpired());
+        $this->assertNotNull($this->accessToken->getValue(false));
     }
+    
+    
     
     
     /**
