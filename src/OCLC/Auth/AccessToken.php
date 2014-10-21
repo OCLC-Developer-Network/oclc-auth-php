@@ -386,6 +386,7 @@ class AccessToken
             $response = \Guzzle::post($url, $guzzleOptions);
             self::parseTokenResponse($response->json());
         } catch (\Guzzle\Http\Exception\BadResponseException $error) {
+            static::$lastRequest = $error->getRequest();
             $this->errorCode = (string) $error->getResponse()->getStatusCode();
             $this->response = $error->getResponse()->getBody(true);
             $responseBody = json_decode($this->response, true);
