@@ -78,7 +78,7 @@ class RefreshToken
     public function isExpired()
     {
         date_default_timezone_set('UTC');
-        if (strtotime($this->expiresAt) < time()) {
+        if (strtotime($this->expiresAt) <= time()) {
             $status = TRUE;
         } else {
             $status = FALSE;
@@ -91,8 +91,8 @@ class RefreshToken
      */
     function __construct($tokenValue, $expiresIn, $expiresAt)
     {
-        if (empty($tokenValue) || empty($expiresIn) || empty($expiresAt)) {
-            throw new LogicException('You must pass a refreh token value, expires in and expires at parameters to construct a refresh token');
+        if (empty($tokenValue) || is_null($expiresIn) || empty($expiresAt)) {
+            throw new LogicException('You must pass a refresh token value, expires in and expires at parameters to construct a refresh token');
         }
         
         $this->refreshToken = $tokenValue;

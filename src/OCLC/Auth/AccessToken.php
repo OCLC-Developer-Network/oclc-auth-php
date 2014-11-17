@@ -190,14 +190,14 @@ class AccessToken
      *
      * @return string
      */
-    public function getValue()
+    public function getValue($autoRefresh = true)
     {
         if (!empty($this->errorCode)) {
             throw new \LogicException($this->errorCode . ' ' . $this->errorMessage);
-        }elseif (self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
+        }elseif ($autoRefresh && self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
             throw new \LogicException('Sorry you do not have a valid Access Token');
-        } elseif (self::isExpired()) {
-            self::refreshToken();
+        } elseif ($autoRefresh && self::isExpired()) {
+            self::refresh();
         }
         return $this->accessTokenString;
     }
@@ -250,7 +250,7 @@ class AccessToken
     public function isExpired()
     {
         date_default_timezone_set('UTC');
-        if (strtotime($this->expiresAt) < time()) {
+        if (strtotime($this->expiresAt) <= time()) {
             $status = TRUE;
         } else {
             $status = FALSE;
@@ -277,7 +277,7 @@ class AccessToken
      *            - contextInstitutionId
      *            - redirect_uri
      *            - code
-     *            - refresh_token
+     *            - refreshToken - refreshToken object
      *            - accessTokenString
      *            - expiresAt
      */
@@ -349,8 +349,14 @@ class AccessToken
             throw new \LogicException('AccessToken must have an associated WSKey Property');
         }
         $this->grantType = 'refresh_token';
-        $this->accessTokenUrl = self::getAccessTokenURL();
+        $this->accessTokenUrl = self::buildAccessTokenURL();
         $authorization = $this->wskey->getHMACSignature('POST', $this->accessTokenUrl);
+        
+        $this->accessTokenString = null;
+        $this->expiresIn = null;
+        $this->expiresAt = null;
+        $this->errorCode = null;
+        $this->errorMessage = null;
         self::requestAccessToken($authorization, $this->accessTokenUrl);
     }
 
@@ -380,6 +386,7 @@ class AccessToken
             $response = \Guzzle::post($url, $guzzleOptions);
             self::parseTokenResponse($response->json());
         } catch (\Guzzle\Http\Exception\BadResponseException $error) {
+            static::$lastRequest = $error->getRequest();
             $this->errorCode = (string) $error->getResponse()->getStatusCode();
             $this->response = $error->getResponse()->getBody(true);
             $responseBody = json_decode($this->response, true);

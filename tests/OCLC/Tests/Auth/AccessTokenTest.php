@@ -97,6 +97,41 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @vcr accessTokenWithRefreshTokenExpired
+     * Test Getting an Access Token which is expired
+     */
+    
+    function testProcessAccessTokenExpired()
+    {
+        $this->accessToken->create($this->wskey);
+    
+        // Test all the properties are set from the JSON response
+        $this->assertAttributeInternalType('array', 'response', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'accessTokenString', $this->accessToken);
+        $this->assertAttributeEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', 'accessTokenString', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'expiresIn', $this->accessToken);
+        $this->assertAttributeEquals('3599', 'expiresIn', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'expiresAt', $this->accessToken);
+        $this->assertAttributeEquals('2013-08-23 18:45:29Z', 'expiresAt', $this->accessToken);
+    
+        $this->assertAttributeInternalType('string', 'contextInstitutionId', $this->accessToken);
+        $this->assertAttributeEquals('128807', 'contextInstitutionId', $this->accessToken);
+    
+        $this->assertInstanceOf('OCLC\Auth\RefreshToken', $this->accessToken->getRefreshToken());
+    
+        $this->assertInstanceOf('OCLC\User', $this->accessToken->getUser());
+    
+        $this->assertTrue($this->accessToken->isExpired());
+        $this->assertNotNull($this->accessToken->getValue(false));
+    }
+    
+    
+    
+    
+    /**
      * @vcr accessTokenSuccess
      * testProcessGoodAuthServerResponseNoRefreshToken
      */

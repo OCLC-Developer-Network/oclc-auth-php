@@ -21,12 +21,10 @@ use Guzzle\Http\Client;
 use Guzzle\Plugin\History\HistoryPlugin;
 use Guzzle\Plugin\Mock\MockPlugin;
 
-class AccessTokenTestRefreshToken extends \PHPUnit_Framework_TestCase
+class AccessTokenViaAuthCodeTest extends \PHPUnit_Framework_TestCase
 {
 
     private $accessToken;
-
-    private $options;
 
     private $wskey;
 
@@ -51,9 +49,13 @@ class AccessTokenTestRefreshToken extends \PHPUnit_Framework_TestCase
         $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
         
         $this->options = array(
-            'refresh_token' => 'rt_239308230'
+            'authenticatingInstitutionId' => 128807,
+            'contextInstitutionId' => 128807,
+            'scope' => static::$services,
+            'redirectUri' => static::$redirect_uri,
+            'code' => 'auth_12384794'
         );
-        $this->accessToken = new AccessToken('refresh_token', $this->options);
+        $this->accessToken = new AccessToken('authorization_code', $this->options);
     }
 
     /**
@@ -62,18 +64,42 @@ class AccessTokenTestRefreshToken extends \PHPUnit_Framework_TestCase
     function testGrantTypeSet()
     {
         $this->assertAttributeInternalType('string', 'grantType', $this->accessToken);
-        $this->assertAttributeEquals('refresh_token', 'grantType', $this->accessToken);
+        $this->assertAttributeEquals('authorization_code', 'grantType', $this->accessToken);
     }
-    
-    function testRefreshTokenSet()
+
+    function testAuthenticatingInstitutionSet()
     {
-        $this->assertAttributeInternalType('string', 'refreshToken', $this->accessToken);
-        $this->assertAttributeEquals('rt_239308230', 'refreshToken', $this->accessToken);
+        $this->assertAttributeInternalType('integer', 'authenticatingInstitutionId', $this->accessToken);
+        $this->assertAttributeEquals('128807', 'authenticatingInstitutionId', $this->accessToken);
     }
-    
-    function testAccess_token_urlSetRefreshToken()
+
+    function testContextInstitutionSet()
     {
-        $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=refresh_token&refresh_token=rt_239308230';
+        $this->assertAttributeInternalType('integer', 'contextInstitutionId', $this->accessToken);
+        $this->assertAttributeEquals('128807', 'contextInstitutionId', $this->accessToken);
+    }
+
+    function testScopeSet()
+    {
+        $this->assertAttributeInternalType('array', 'scope', $this->accessToken);
+        $this->assertAttributeEquals(static::$services, 'scope', $this->accessToken);
+    }
+
+    function testRedirect_uriSet()
+    {
+        $this->assertAttributeInternalType('string', 'redirectUri', $this->accessToken);
+        $this->assertAttributeEquals(static::$redirect_uri, 'redirectUri', $this->accessToken);
+    }
+
+    function testCodeSet()
+    {
+        $this->assertAttributeInternalType('string', 'code', $this->accessToken);
+        $this->assertAttributeEquals('auth_12384794', 'code', $this->accessToken);
+    }
+
+    function testAccess_token_urlSet()
+    {
+        $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=authorization_code&code=auth_12384794&authenticatingInstitutionId=128807&contextInstitutionId=128807&redirect_uri=' . urlencode(static::$redirect_uri);
         $this->assertAttributeInternalType('string', 'accessTokenUrl', $this->accessToken);
         $this->assertAttributeEquals($desiredURL, 'accessTokenUrl', $this->accessToken);
     }
@@ -81,10 +107,10 @@ class AccessTokenTestRefreshToken extends \PHPUnit_Framework_TestCase
     /**
      * can create Access Token
      */
-    function testCreateWithRefreshToken()
+    function testCreateWithAuthCode()
     {
         $accessTokenArgs = array(
-            'refresh_token',
+            'authorization_code',
             $this->options
         );
         $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
@@ -101,13 +127,13 @@ class AccessTokenTestRefreshToken extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException LogicException
-     * @expectedExceptionMessage You must pass the option refresh_token to construct an Access Token using the refresh_token grant type
+     * @expectedExceptionMessage You must pass the options: code, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the authorization_code grant type
      */
-    function testInvalidOptionsRefreshTokenGrantType()
+    function testInvalidOptionsAuthCodeGrantType()
     {
         $options = array(
-            'code' => 'auth_239308230'
+            'refresh_token' => 'rt_239308230'
         );
-        $this->accessToken = new AccessToken('refresh_token', $options);
+        $this->accessToken = new AccessToken('authorization_code', $options);
     }
 }

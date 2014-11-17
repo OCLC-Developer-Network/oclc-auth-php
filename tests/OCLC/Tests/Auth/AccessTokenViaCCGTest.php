@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2013 OCLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +22,12 @@ use Guzzle\Http\Client;
 use Guzzle\Plugin\History\HistoryPlugin;
 use Guzzle\Plugin\Mock\MockPlugin;
 
-class AccessTokenTestAuthCode extends \PHPUnit_Framework_TestCase
+class AccessTokenViaCCGTest extends \PHPUnit_Framework_TestCase
 {
 
     private $accessToken;
+
+    private $options;
 
     private $wskey;
 
@@ -33,12 +36,9 @@ class AccessTokenTestAuthCode extends \PHPUnit_Framework_TestCase
         'WMS_ACQ'
     );
 
-    private static $redirect_uri = 'http://library.worldshare.edu/test';
-
     function setUp()
     {
         $wskeyOptions = array(
-            'redirectUri' => static::$redirect_uri,
             'services' => static::$services
         );
         $wskeyArgs = array(
@@ -48,14 +48,12 @@ class AccessTokenTestAuthCode extends \PHPUnit_Framework_TestCase
         );
         $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
         
-        $options = array(
+        $this->options = array(
             'authenticatingInstitutionId' => 128807,
             'contextInstitutionId' => 128807,
-            'scope' => static::$services,
-            'redirectUri' => static::$redirect_uri,
-            'code' => 'auth_12384794'
+            'scope' => static::$services
         );
-        $this->accessToken = new AccessToken('authorization_code', $options);
+        $this->accessToken = new AccessToken('client_credentials', $this->options);
     }
 
     /**
@@ -64,7 +62,7 @@ class AccessTokenTestAuthCode extends \PHPUnit_Framework_TestCase
     function testGrantTypeSet()
     {
         $this->assertAttributeInternalType('string', 'grantType', $this->accessToken);
-        $this->assertAttributeEquals('authorization_code', 'grantType', $this->accessToken);
+        $this->assertAttributeEquals('client_credentials', 'grantType', $this->accessToken);
     }
 
     function testAuthenticatingInstitutionSet()
@@ -85,32 +83,39 @@ class AccessTokenTestAuthCode extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals(static::$services, 'scope', $this->accessToken);
     }
 
-    function testRedirect_uriSet()
-    {
-        $this->assertAttributeInternalType('string', 'redirectUri', $this->accessToken);
-        $this->assertAttributeEquals(static::$redirect_uri, 'redirectUri', $this->accessToken);
-    }
-
-    function testCodeSet()
-    {
-        $this->assertAttributeInternalType('string', 'code', $this->accessToken);
-        $this->assertAttributeEquals('auth_12384794', 'code', $this->accessToken);
-    }
-
     function testAccess_token_urlSet()
     {
-        $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=authorization_code&code=auth_12384794&authenticatingInstitutionId=128807&contextInstitutionId=128807&redirect_uri=' . urlencode(static::$redirect_uri);
+        $desiredURL = 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=client_credentials&authenticatingInstitutionId=128807&contextInstitutionId=128807&scope=' . implode(static::$services, ' ');
+        
         $this->assertAttributeInternalType('string', 'accessTokenUrl', $this->accessToken);
         $this->assertAttributeEquals($desiredURL, 'accessTokenUrl', $this->accessToken);
     }
 
-    /**
-     * can create Access Token
-     */
-    function testCreateWithAuthCode()
+    function testCreateWithClientCredentials()
+    {
+        $user = $this->getMock('OCLC\User', null, array(
+            128807,
+            'principalID',
+            'principalIDNS'
+        ));
+        $accessTokenArgs = array(
+            'client_credentials',
+            $this->options
+        );
+        $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
+            'create'
+        ), $accessTokenArgs);
+        $accessTokenMock->expects($this->once())
+            ->method('create')
+            ->with($this->isInstanceOf('OCLC\Auth\WSKey'), $this->isInstanceOf('OCLC\User'))
+            ->will($this->returnSelf());
+        $this->assertSame($accessTokenMock, $accessTokenMock->create($this->wskey, $user));
+    }
+
+    function testCreateWithClientCredentialsNoUser()
     {
         $accessTokenArgs = array(
-            'authorization_code',
+            'client_credentials',
             $this->options
         );
         $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
@@ -127,13 +132,13 @@ class AccessTokenTestAuthCode extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException LogicException
-     * @expectedExceptionMessage You must pass the options: code, redirect_uri, scope, authenticating_institution_id, context_institution_id, to construct an Access Token using the authorization_code grant type
+     * @expectedExceptionMessage You must pass the options: scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the client_credential grant type
      */
-    function testInvalidOptionsAuthCodeGrantType()
+    function testInvalidOptionsClientCredentialsGrantType()
     {
         $options = array(
             'refresh_token' => 'rt_239308230'
         );
-        $this->accessToken = new AccessToken('authorization_code', $options);
+        $this->accessToken = new AccessToken('client_credentials', $options);
     }
 }
