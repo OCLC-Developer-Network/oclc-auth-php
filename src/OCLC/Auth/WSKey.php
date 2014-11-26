@@ -54,7 +54,8 @@ class WSKey
     
     protected static $validOptions = array(
         'redirectUri',
-        'services'
+        'services',
+        'logger'
     );
 
     private $key;
@@ -88,6 +89,7 @@ class WSKey
      *            an array of three possible name/value pairs
      *            - redirect_uri: a string which is the redirect URI associated with the WSKey that will 'catch' the redirect back to your app after login
      *            - services: an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
+     *            - logger: a Guzzle\Plugin\Log\LogPlugin object
      */
     public function __construct($key, $secret, $options = null)
     {
@@ -104,6 +106,8 @@ class WSKey
                 Throw new \BadMethodCallException('You must pass a valid redirectUri');
             } elseif (isset($options['services']) && (empty($options['services']) || ! (is_array($options['services'])))) {
                 Throw new \BadMethodCallException('You must pass an array of at least one service');
+            }elseif (isset($options['logger']) && !is_a($options['logger'], 'Guzzle\Plugin\Log\LogPlugin')){
+                Throw new \BadMethodCallException('The logger must be a valid Guzzle\Plugin\Log\LogPlugin object');
             }
             
             foreach ($options as $name => $value) {
@@ -225,11 +229,7 @@ class WSKey
             'code' => $authCode,
             'redirectUri' => $this->redirectUri
         );
-        AccessToken::$userAgent = static::$userAgent;
-        AccessToken::$testServer = static::$testServer;
-        $accessToken = new AccessToken('authorization_code', $options);
-        $accessToken->create($this);
-        return $accessToken;
+        return $this->getAccessToken('authorization_code', $options);
     }
 
     /**
@@ -255,11 +255,7 @@ class WSKey
             'contextInstitutionId' => $contextInstitutionId,
             'scope' => $this->services
         );
-        AccessToken::$userAgent = static::$userAgent;
-        AccessToken::$testServer = static::$testServer;
-        $accessToken = new AccessToken('client_credentials', $options);
-        $accessToken->create($this, $user);
-        return $accessToken;
+        return $this->getAccessToken('client_credentials', $options);
     }
 
     /**
@@ -326,7 +322,7 @@ class WSKey
      *
      * Create a Signature for a request using
      *
-     * @param string $wskey            
+     * @param string $key            
      * @param string $secret            
      * @param string $method            
      * @param string $request_url            
@@ -344,7 +340,7 @@ class WSKey
     /**
      * Normalize the Request by breaking apart the URL
      *
-     * @param string $wskey            
+     * @param string $key            
      * @param string $method            
      * @param string $request_url            
      * @param string $bodyHash            
@@ -352,7 +348,7 @@ class WSKey
      * @param string $nonce            
      * @return string
      */
-    private static function normalizeRequest($wskey, $method, $request_url, $bodyHash, $timestamp, $nonce)
+    private static function normalizeRequest($key, $method, $request_url, $bodyHash, $timestamp, $nonce)
     {
         $signatureUrl = 'https://www.oclc.org/wskey';
         
@@ -371,7 +367,7 @@ class WSKey
                 }
         $path = $parsedSigUrl["path"];
         
-        $normalizedRequest = $wskey . "\n" . $timestamp . "\n" . $nonce . "\n" . $bodyHash . "\n" . $method . "\n" . $host . "\n" . $port . "\n" . $path . "\n";
+        $normalizedRequest = $key . "\n" . $timestamp . "\n" . $nonce . "\n" . $bodyHash . "\n" . $method . "\n" . $host . "\n" . $port . "\n" . $path . "\n";
         
         if (isset($parsedUrl["query"])) {
             $params = array();
@@ -384,9 +380,9 @@ class WSKey
             }
             sort($params);
             
-            foreach ($params as $key) {
-                $name = urlencode($key[0]);
-                $value = urlencode($key[1]);
+            foreach ($params as $param) {
+                $name = urlencode($param[0]);
+                $value = urlencode($param[1]);
                 $nameAndValue = "$name=$value";
                 $nameAndValue = str_replace("+", "%20", $nameAndValue);
                 $nameAndValue = str_replace("*", "%2A", $nameAndValue);
@@ -429,5 +425,23 @@ class WSKey
             }
         }
         return $authValuePairs;
+    }
+    
+    /**
+     * Get an Access Token
+     * @param OCLC/Auth/WSKey $wskey
+     * @param array $options
+     * @param OCLC/User $user 
+     */
+    protected function getAccessToken($grant_type, $options)
+    {
+        AccessToken::$userAgent = static::$userAgent;
+        AccessToken::$testServer = static::$testServer;
+        if (isset($this->logger)){
+            $options['logger'] = $this->logger;
+        }
+        $accessToken = new AccessToken($grant_type, $options);
+        $accessToken->create($this, $this->user);
+        return $accessToken;
     }
 }
