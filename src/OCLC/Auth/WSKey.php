@@ -44,7 +44,6 @@ class WSKey
      * @var array $services an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
      * @var string $debugTimestamp a timestamp for debug purposes
      * @var string $debugNonce a nonce for debug purposes
-     * @var \OCLC\User $user an /OCLC/User object which contains a valid principalID, principalIDNS and institution ID for a user
      * @var string $bodyHash bodyHash of the request
      * @var array $authParams an array of Authentication name/value pairs example username/testuser
      */
@@ -255,7 +254,7 @@ class WSKey
             'contextInstitutionId' => $contextInstitutionId,
             'scope' => $this->services
         );
-        return $this->getAccessToken('client_credentials', $options);
+        return $this->getAccessToken('client_credentials', $options, $user);
     }
 
     /**
@@ -433,7 +432,7 @@ class WSKey
      * @param array $options
      * @param OCLC/User $user 
      */
-    protected function getAccessToken($grant_type, $options)
+    protected function getAccessToken($grant_type, $options, $user = null)
     {
         AccessToken::$userAgent = static::$userAgent;
         AccessToken::$testServer = static::$testServer;
@@ -441,7 +440,7 @@ class WSKey
             $options['logger'] = $this->logger;
         }
         $accessToken = new AccessToken($grant_type, $options);
-        $accessToken->create($this, $this->user);
+        $accessToken->create($this, $user);
         return $accessToken;
     }
 }
