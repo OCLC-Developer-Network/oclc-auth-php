@@ -54,7 +54,8 @@ class WSKey
     protected static $validOptions = array(
         'redirectUri',
         'services',
-        'logger'
+        'logger',
+        'testMode'
     );
 
     private $key;
@@ -68,6 +69,8 @@ class WSKey
     private $debugTimestamp = null;
 
     private $debugNonce = null;
+    
+    private $testMode = false;
 
     private $user = null;
 
@@ -201,7 +204,10 @@ class WSKey
      */
     public function getLoginURL($authenticating_institution_id, $context_institution_id)
     {
-        $auth_code = new AuthCode($this->key, $authenticating_institution_id, $context_institution_id, $this->redirectUri, $this->services);
+        if ($this->testMode == false && empty($this->services)){
+            Throw new \BadMethodCallException('You must pass an array of at least one service');
+        }
+        $auth_code = new AuthCode($this->key, $authenticating_institution_id, $context_institution_id, $this->redirectUri, $this->services, $this->testMode);
         return $auth_code->getLoginURL();
     }
 
@@ -215,11 +221,11 @@ class WSKey
      */
     public function getAccessTokenWithAuthCode($authCode, $authenticatingInstitutionId, $contextInstitutionId)
     {
-        if (empty($authCode)) {
+        if ($this->testMode == false && empty($authCode)) {
             throw new \BadMethodCallException('You must pass an authorization code');
-        } elseif (empty($authenticatingInstitutionId)) {
+        } elseif ($this->testMode == false && empty($authenticatingInstitutionId)) {
             throw new \BadMethodCallException('You must pass an authenticating_institution_id');
-        } elseif (empty($contextInstitutionId)) {
+        } elseif ($this->testMode == false && empty($contextInstitutionId)) {
             throw new \BadMethodCallException('You must pass a context_institution_id');
         }
         $options = array(
@@ -241,12 +247,12 @@ class WSKey
      */
     public function getAccessTokenWithClientCredentials($authenticatingInstitutionId, $contextInstitutionId, $user = null)
     {
-        if (empty($authenticatingInstitutionId)) {
+        if ($this->testMode == false && empty($authenticatingInstitutionId)) {
             throw new \BadMethodCallException('You must pass an authenticating_institution_id');
-        } elseif (empty($contextInstitutionId)) {
+        } elseif ($this->testMode == false && $this->testMode == false && empty($contextInstitutionId)) {
             throw new \BadMethodCallException('You must pass a context_institution_id');
-        } elseif (empty($this->services)) {
-            throw new \BadMethodCallException('You must set services on the WSKey');
+        } elseif ($this->testMode == false && empty($this->services)) {
+            Throw new \BadMethodCallException('You must pass an array of at least one service');
         }
         
         $options = array(
@@ -439,6 +445,11 @@ class WSKey
         if (isset($this->logger)){
             $options['logger'] = $this->logger;
         }
+        
+        if (isset($this->testMode)){
+            $options['testMode'] = $this->testMode;
+        }
+        
         $accessToken = new AccessToken($grant_type, $options);
         $accessToken->create($this, $user);
         return $accessToken;

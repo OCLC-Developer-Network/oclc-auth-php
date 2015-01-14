@@ -75,6 +75,17 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->authCode->getLoginURL(), $url);
     }
     
+    /**
+     * can get Login URL with no scope
+     */
+    function testNoScopeGetLoginURL()
+    {
+        $authCode = new authCode('test', 1, 1, static::$redirect_uri, null, true);
+        $url = 'https://authn.sd00.worldcat.org/oauth2/authorizeCode?client_id=test&authenticatingInstitutionId=1&contextInstitutionId=1&redirect_uri=' . urlencode(static::$redirect_uri) . '&response_type=code';
+        $this->assertEquals($authCode->getLoginURL(), $url);
+    }
+    
+    
     /* Negative Test Cases */
     
     /**

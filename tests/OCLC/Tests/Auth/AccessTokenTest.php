@@ -162,6 +162,10 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('tk_Yebz4BpEp9dAsghA7KpWx6dYD1OZKWBlHjqW', $this->accessToken->getValue());
     }
     
+    /**
+     * Test creating an Access token when no scope present and debug on
+     */
+    
     /* Negative Test Cases */
     
     /**

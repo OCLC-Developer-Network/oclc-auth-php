@@ -204,6 +204,27 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->wskey->getHMACSignature('GET', 'http://www.oclc.org/test', $options), $Signature);
     }
     
+    /**
+     * @vcr accessTokenWithRefreshTokenSuccess
+     * getAccessTokenWithClientCredentials should return a valid Access Token object
+     */
+    function testNullServicesDebug()
+    {
+        $services = null;
+        $options = array(
+            'redirectUri' => static::$redirect_uri,
+            'services' => $services,
+            'testMode' => true
+        );
+        $this->wskey = new WSKey('test', 'secret', $options);
+        
+        $url = 'https://authn.sd00.worldcat.org/oauth2/authorizeCode?client_id=test&authenticatingInstitutionId=1&contextInstitutionId=1&redirect_uri=' . urlencode(static::$redirect_uri) . '&response_type=code';
+        $this->assertEquals($this->wskey->getLoginURL(1, 1), $url);
+        
+        $AccessToken = $this->wskey->getAccessTokenWithClientCredentials(128807, 128807, $this->user);
+        $this->assertInstanceOf('OCLC\Auth\AccessToken', $AccessToken);
+    }
+    
     /* Negative Test Cases */
     
     /**
@@ -274,7 +295,7 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         );
         $this->wskey = new WSKey('test', 'secret', $options);
     }
-
+    
     /**
      * @expectedException BadMethodCallException
      * @expectedExceptionMessage You must pass an array of at least one service
@@ -287,5 +308,35 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
             'services' => $services
         );
         $this->wskey = new WSKey('test', 'secret', $options);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass an array of at least one service
+     */
+    function testNullServicesGetLoginURL()
+    {
+        $services = null;
+        $options = array(
+            'redirectUri' => 'http://www.oclc.org/test',
+            'services' => $services
+        );
+        $this->wskey = new WSKey('test', 'secret', $options);
+        $this->wskey->getLoginURL(1, 1);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass an array of at least one service
+     */
+    function testNullServicesCCG()
+    {
+        $services = null;
+        $options = array(
+            'redirectUri' => 'http://www.oclc.org/test',
+            'services' => $services
+        );
+        $this->wskey = new WSKey('test', 'secret', $options);
+        $AccessToken = $this->wskey->getAccessTokenWithClientCredentials(128807, 128807);
     }
 }

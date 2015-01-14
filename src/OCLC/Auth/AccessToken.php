@@ -83,7 +83,8 @@ class AccessToken
         'refreshToken',
         'accessTokenString',
         'expiresAt',
-        'logger'
+        'logger',
+        'testMode'
     );
 
     public static $validGrantTypes = array(
@@ -101,6 +102,8 @@ class AccessToken
     private $scope;
     
     private $logger = null;
+    
+    private $testMode = false;
     
     private $headers;
 
@@ -306,11 +309,11 @@ class AccessToken
         }
         
         if (empty($this->accessTokenString)){
-            if ($this->grantType == 'authorization_code' && (empty($options['code']) || empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']))) {
+            if ($this->testMode == false && $this->grantType == 'authorization_code' && (empty($options['code']) || empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']))) {
                 throw new \BadMethodCallException('You must pass the options: code, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the authorization_code grant type');
-            } elseif ($this->grantType == 'client_credentials' && (empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']) || empty($options['scope']))) {
+            } elseif ($this->testMode == false && $this->grantType == 'client_credentials' && (empty($options['authenticatingInstitutionId']) || empty($options['contextInstitutionId']) || empty($options['scope']))) {
                 throw new \BadMethodCallException('You must pass the options: scope, authenticatingInstitutionId, contextInstitutionId, to construct an Access Token using the client_credential grant type');
-            } elseif ($this->grantType == 'refresh_token' && (empty($options['refreshToken']) || (! is_a($options['refreshToken'], 'OCLC\Auth\RefreshToken')))) {
+            } elseif ($this->testMode == false && $this->grantType == 'refresh_token' && (empty($options['refreshToken']) || (! is_a($options['refreshToken'], 'OCLC\Auth\RefreshToken')))) {
                 throw new \BadMethodCallException('You must pass the option refreshToken to construct an Access Token using the refresh_token grant type');
             }
             
@@ -421,7 +424,10 @@ class AccessToken
             $access_token_url .= '&code=' . $this->code . '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId . '&contextInstitutionId=' . $this->contextInstitutionId;
             $access_token_url .= '&redirect_uri=' . urlencode($this->redirectUri);
         } else {
-            $access_token_url .= '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId . '&contextInstitutionId=' . $this->contextInstitutionId . '&scope=' . implode($this->scope, ' ');
+            $access_token_url .= '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId . '&contextInstitutionId=' . $this->contextInstitutionId;
+            if (isset($this->scope)) {
+                $access_token_url .= '&scope=' . implode($this->scope, ' ');
+            }
         }
         return $access_token_url;
     }

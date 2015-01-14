@@ -27,6 +27,8 @@ class AuthCode
      */
     public static $authorizationServer = 'https://authn.sd00.worldcat.org/oauth2';
 
+    private $testMode = false;
+    
     private $clientId;
 
     private $authenticatingInstitutionId;
@@ -46,23 +48,25 @@ class AuthCode
      * @param string $redirectUri            
      * @param string $scope            
      */
-    public function __construct($client_id, $authenticatingInstitutionId, $contextInstitutionId, $redirectUri, $scope)
+    public function __construct($client_id, $authenticatingInstitutionId, $contextInstitutionId, $redirectUri, $scope, $testMode = false)
     {
+        $this->testMode = $testMode;
+        
         if (empty($client_id)) {
             Throw new \BadMethodCallException('You must pass a valid key to construct an AuthCode');
-        } elseif (empty($authenticatingInstitutionId)) {
+        } elseif ($this->testMode == false && empty($authenticatingInstitutionId)) {
             Throw new \BadMethodCallException('You must pass an authenticatingInstitutionId');
-        } elseif (! (is_int($authenticatingInstitutionId))) {
+        } elseif ($this->testMode == false && ! (is_int($authenticatingInstitutionId))) {
             Throw new \BadMethodCallException('You must pass a valid integer for the authenticatingInstitutionId');
-        } elseif (empty($contextInstitutionId)) {
+        } elseif ($this->testMode == false && empty($contextInstitutionId)) {
             Throw new \BadMethodCallException('You must pass a contextInstitutionId');
-        } elseif (! (is_int($contextInstitutionId))) {
+        } elseif ($this->testMode == false && ! (is_int($contextInstitutionId))) {
             Throw new \BadMethodCallException('You must pass a valid integer for the contextInstitutionId');
-        } elseif (empty($redirectUri)) {
+        } elseif ($this->testMode == false && empty($redirectUri)) {
             Throw new \BadMethodCallException('You must pass a redirectUri');
-        } elseif (filter_var($redirectUri, FILTER_VALIDATE_URL) === FALSE) {
+        } elseif ($this->testMode == false && filter_var($redirectUri, FILTER_VALIDATE_URL) === FALSE) {
             Throw new \BadMethodCallException('You must pass a valid redirectUri');
-        } elseif (empty($scope) || ! (is_array($scope))) {
+        } elseif ($this->testMode == false && (empty($scope) || ! (is_array($scope)))) {
             Throw new \BadMethodCallException('You must pass an array of at least one scope');
         }
         
@@ -82,7 +86,10 @@ class AuthCode
     {
         $loginURL = static::$authorizationServer . '/authorizeCode?client_id=' . $this->clientId;
         $loginURL .= '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId . '&contextInstitutionId=' . $this->contextInstitutionId;
-        $loginURL .= '&redirect_uri=' . urlencode($this->redirectUri) . '&response_type=code' . '&scope=' . implode($this->scope, ' ');
+        $loginURL .= '&redirect_uri=' . urlencode($this->redirectUri) . '&response_type=code';
+        if (isset($this->scope)){
+            $loginURL.= '&scope=' . implode($this->scope, ' ');
+        }
         return $loginURL;
     }
 }
