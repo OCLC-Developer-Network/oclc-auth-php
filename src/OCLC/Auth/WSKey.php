@@ -1,83 +1,132 @@
 <?php
-// Copyright 2013 OCLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * OCLC-Auth
+ * Copyright 2013 OCLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @package OCLC/Auth
+ * @copyright Copyright (c) 2013 OCLC
+ * @license http://www.opensource.org/licenses/Apache-2.0
+ * @author Karen A. Coombs <coombsk@oclc.org>
+*/
 namespace OCLC\Auth;
 
 use OCLC\User as User;
 use OCLC\Auth\AccessToken;
 use OCLC\Auth\AuthCode;
 
+/**
+ * A class that represents a clients OCLC Web Service Key.
+ * The WSKey has a key and secret and has access to one or more OCLC Web Services.
+ * Optionally, it can include principal information in the form of a principal ID and IDNS that represent an user and a redirect URI to be used in the OAuth 2 login flows.
+ * The WSKey class is used to
+ * - generate HMAC signatures
+ * - return the login URL for the OCLC Explicit Authorization flow for requesting an AuthCode
+ * - redeem an authorization code for an access token
+ * - request an access token via a client credentials grant flow
+ *
+ * @author Karen A. Coombs <coombsk@oclc.org>
+ *
+ *         See the OCLC/Auth documentation for examples.
+ *
+ */
 class WSKey
-{
-
-    /**
-     * A class that represents a clients OCLC Web Service Key.
-     * The WSKey has a key and secret and has access to one or more OCLC Web Services.
-     * Optionally, it can include principal information in the form of a principal ID and IDNS that represent an user and a redirect URI to be used in the OAuth 2 login flows.
-     * The WSKey class is used to
-     * - generate HMAC signatures
-     * - return the login URL for the OCLC Explicit Authorization flow for requesting an AuthCode
-     * - redeem an authorization code for an access token
-     * - request an access token via a client credentials grant flow
-     *
-     * @author Karen A. Coombs <coombsk@oclc.org>
-     *        
-     *         See the OCLC/Auth documentation for examples.
-     *        
-     * @var binary static $testServer
-     * @var string static $userAgent
-     * @var array static $validOptions the option values valid for constructor
-     * @var string $key the hashed string that represents your API key
-     * @var string $secret the secret used when generating digital signatures
-     * @var string $redirectUri the redirect URI associated with the WSKey that will 'catch' the redirect back to your app after login
-     * @var array $services an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
-     * @var string $debugTimestamp a timestamp for debug purposes
-     * @var string $debugNonce a nonce for debug purposes
-     * @var string $bodyHash bodyHash of the request
-     * @var array $authParams an array of Authentication name/value pairs example username/testuser
-     */
-    
+{   
+	/**
+	 * Whether or not the application is interacting with a test server
+	 * @var binary static $testServer
+	 */
     public static $testServer = FALSE;
-    public static $userAgent = 'oclc-auth-php';
     
+	/**
+	 * The user agent to use when sending the request 
+	 * @var string static $userAgent
+	 */
+	public static $userAgent = 'oclc-auth-php';
+    
+	/**
+	 * An array of options values valid for constructor
+	 * @var array static $validOptions 
+	 */
     protected static $validOptions = array(
         'redirectUri',
         'services',
         'logger',
         'testMode'
     );
-
+    
+    /**
+     * The string that represents your API key
+     * @var string $key
+     */ 
     private $key;
-
+    
+    /**
+     * The secret used when generating digital signatures
+     * @var string $secret
+     */
     private $secret;
-
+    
+    /**
+     * the redirect URI associated with the WSKey that will 'catch' the redirect back to your app after login
+     * @var string $redirectUri
+     */
     private $redirectUri;
-
+    
+    /**
+     * An array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
+     * @var array $services
+     */
     private $services;
-
+    
+    /**
+     * a timestamp for debug purposes
+     * @var string $debugTimestamp
+     */ 
     private $debugTimestamp = null;
-
+    
+    /**
+     * a nonce for debug purposes
+     * @var string $debugNonce
+     */
     private $debugNonce = null;
     
+    /**
+     * Whether or not to run in test mode
+     * @var boolean $testMode
+     */
     private $testMode = false;
-
+    
+    /**
+     * User object used when building an HMAC signature of using client credentials grant
+     * @var OCLC\User $user
+     */
     private $user = null;
-
+    
+    /**
+     * bodyHash of the request
+     * @var string $bodyHash 
+     */
     private $bodyHash = null;
-
+    
+    /**
+     * an array of Authentication name/value pairs example username/testuser
+     * @var array $authParams
+     */
     private $authParams = null;
     
+    /**
+     * The signed request
+     * @var string $signedRequest
+     */
     private $signedRequest = null;
 
     /**
@@ -214,9 +263,9 @@ class WSKey
     /**
      * Returns an OCLC/Auth/AccessToken object
      *
-     * @param string authorization code returned as a query parameter
-     * @param integer authenticating_institution_id the WorldCat Registry ID of the institution that will login the user
-     * @param integer context_institution_id the WorldCat Registry ID of the institution whose data will be accessed
+     * @param string $authCode authorization code returned as a query parameter
+     * @param integer $authenticatingInstitutionId the WorldCat Registry ID of the institution that will login the user
+     * @param integer $contextInstitutionId the WorldCat Registry ID of the institution whose data will be accessed
      * @return OCLC/Auth/AccessToken Returns an /OCLC/Auth/AccessToken object when given
      */
     public function getAccessTokenWithAuthCode($authCode, $authenticatingInstitutionId, $contextInstitutionId)
@@ -240,9 +289,9 @@ class WSKey
     /**
      * Returns an OCLC/Auth/AccessToken object
      *
-     * @param integer authenticating_institution_id the WorldCat Registry ID of the institution that will login the user
-     * @param integer context_institution_id the WorldCat Registry ID of the institution whose data will be accessed
-     * @param OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
+     * @param integer $authenticatingInstitutionId the WorldCat Registry ID of the institution that will login the user
+     * @param integer $contextInstitutionId the WorldCat Registry ID of the institution whose data will be accessed
+     * @param OCLC/User $user an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
      * @return OCLC/Auth/AccessToken Returns an /OCLC/Auth/AccessToken object when given
      */
     public function getAccessTokenWithClientCredentials($authenticatingInstitutionId, $contextInstitutionId, $user = null)
@@ -269,13 +318,12 @@ class WSKey
      *
      * Generates a digital signature for a given request according to the OAuth HMAC specification
      *
-     * @param string http_method the HTTP method, GET, POST, PUT, DELETE
-     * @param string url the URL the request will be made to
+     * @param string $method the HTTP method, GET, POST, PUT, DELETE
+     * @param string $request_url the URL the request will be made to
      * @param array $options
      *            - User - OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
-     *            - BodyHash - bodyHash of the request
+     *            - BodyHash - bodyHash of the request this is optional
      *            - AuthParams - an array of Authentication name/value pairs example username/testuser
-     * @param  string bodyHash the body of the request. This is optional
      * @return string The HMAC Signature that should be sent in the Authorization Header
      */
     public function getHMACSignature($method, $request_url, $options = null)
@@ -402,8 +450,8 @@ class WSKey
     /**
      * Add the PrincipalID, PrincipalIDNS and any other Authentication Parameters to the Authorization Header
      *
-     * @param OCLC/User $User            
-     * @param array $AuthParams            
+     * @param OCLC/User $user            
+     * @param array $authParams            
      * @return string
      */
     private static function AddAuthParams($user, $authParams)
@@ -434,7 +482,7 @@ class WSKey
     
     /**
      * Get an Access Token
-     * @param OCLC/Auth/WSKey $wskey
+     * @param string $grant_type
      * @param array $options
      * @param OCLC/User $user 
      */

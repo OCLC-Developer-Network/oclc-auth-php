@@ -1,42 +1,70 @@
 <?php
-// Copyright 2013 OCLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * OCLC-Auth
+ * Copyright 2013 OCLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @package OCLC/Auth
+ * @copyright Copyright (c) 2013 OCLC
+ * @license http://www.opensource.org/licenses/Apache-2.0
+ * @author Karen A. Coombs <coombsk@oclc.org>
+*/
 namespace OCLC\Auth;
+/**
+ * A class that represents the Authorization code object
+ * 
+ */
 
 class AuthCode
 {
-
-    /**
-     *
-     * @var string $clientId;
-     * @var integer $authenticatingInstitutionId;
-     * @var integer $contextInstitutionId;
-     * @var string $redirectUri;
-     * @var array $scope
-     */
+	/**
+	 * The url for the authorization server
+	 * @var string
+	 */
     public static $authorizationServer = 'https://authn.sd00.worldcat.org/oauth2';
 
+    /**
+     * Whether or not to run in test mode
+     * @var boolean
+     */
     private $testMode = false;
     
+    /**
+     * The key value of the WSKey
+     * @var string
+     */
     private $clientId;
 
+    /**
+     * The authenticating institution id
+     * @var integer
+     */
     private $authenticatingInstitutionId;
 
+    /**
+     * The context institution id
+     * @var integer
+     */
     private $contextInstitutionId;
 
+    /**
+     * The redirect uri
+     * @var string
+     */
     private $redirectUri;
 
+    /**
+     * An array of scope values
+     * @var array
+     */
     private $scope;
 
     /**
@@ -46,7 +74,8 @@ class AuthCode
      * @param integer $authenticatingInstitutionId            
      * @param integer $contextInstitutionId            
      * @param string $redirectUri            
-     * @param string $scope            
+     * @param string $scope 
+     * @param boolean $testMode           
      */
     public function __construct($client_id, $authenticatingInstitutionId, $contextInstitutionId, $redirectUri, $scope, $testMode = false)
     {

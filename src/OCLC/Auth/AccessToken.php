@@ -1,17 +1,22 @@
 <?php
-// Copyright 2013 OCLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * OCLC-Auth
+ * Copyright 2013 OCLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @package OCLC/Auth
+ * @copyright Copyright (c) 2013 OCLC
+ * @license http://www.opensource.org/licenses/Apache-2.0
+ * @author Karen A. Coombs <coombsk@oclc.org>
+*/
 namespace OCLC\Auth;
 
 use Guzzle\Http\Client;
@@ -19,61 +24,49 @@ use Guzzle\Plugin\History\HistoryPlugin;
 use Guzzle\Plugin\Mock\MockPlugin;
 use OCLC\Auth\WSKey;
 use OCLC\User;
-
+/**
+ * A class that represents a client's OCLC Access Token.
+ * An Access Token typically represents the rights of an application
+ * - to access specific web services
+ * - to interact with data at a specific insitution
+ * - on behalf of a specific a given user
+ * Access Tokens have several properties including
+ * - Token String
+ * - Token Type
+ * - Expires
+ * - Expires At
+ * They also may have a Refresh Token Object with three properties
+ * - Refresh Token (string value)
+ * - Refresh Token Expires In
+ * - Refresh Token Expires At
+ *
+ * @author Karen A. Coombs <coombsk@oclc.org>
+ *
+ *         See the OCLC/Auth documentation for examples.
+ */
 class AccessToken
 {
-
-    /**
-     * A class that represents a client's OCLC Access Token.
-     * An Access Token typically represents the rights of an application
-     * - to access specific web services
-     * - to interact with data at a specific insitution
-     * - on behalf of a specific a given user
-     * Access Tokens have several properties including
-     * - Token String
-     * - Token Type
-     * - Expires
-     * - Expires At
-     * They also may have a Refresh Token Object with three properties
-     * - Refresh Token (string value)
-     * - Refresh Token Expires In
-     * - Refresh Token Expires At
-     *
-     * @author Karen A. Coombs <coombsk@oclc.org>
-     *        
-     *         See the OCLC/Auth documentation for examples.
-     *        
-     * @var array static $authorizationServer
-     * @var binary static $testServer
-     * @var string static $userAgent
-     * @var array static $validOptions
-     * @var array static $validGrantTypes
-     * @var string $grant_type
-     * @var integer $authenticatingInstitutionId;
-     * @var integer $contextInstitutionId;
-     * @var string $redirectUri;
-     * @var array $scope
-     * @var string $accessTokenUrl
-     * @var array $headers
-     * @var OCLC\Auth\WSKey $wskey
-     * @var OCLC\User $user
-     * @var \Guzzle\Http\Exception\BadResponseException $error
-     * @var string $errorCode
-     * @var string $errorWWWAuthenticate
-     * @var string $errorMessage
-     *     
-     * @var string $response
-     * @var string $type
-     * @var string $accessTokenString
-     * @var integer $expiresIn
-     * @var string $expiresAt
-     * @var OCLC\Auth\RefreshToken $refreshToken
-     *     
-     */
+	/**
+	 * The url for the authorization server
+	 * @var array static $authorizationServer
+	 */
     public static $authorizationServer = 'https://authn.sd00.worldcat.org/oauth2';
+    /**
+     * Whether or not to operate in test server mode
+     *@var binary static $testServer
+     */
     public static $testServer = FALSE;
+    
+    /**
+     * The user agent string
+     *@var string static $userAgent
+     */
     public static $userAgent = 'oclc-auth-php';
 
+    /**
+     * An array of the valid options which can be passed in
+     *@var array static $validOptions
+     */
     public static $validOptions = array(
         'scope',
         'authenticatingInstitutionId',
@@ -86,51 +79,136 @@ class AccessToken
         'logger',
         'testMode'
     );
-
+    
+    /**
+     *An array of the valid grant types 
+     *@var array static $validGrantTypes
+     */
     public static $validGrantTypes = array(
         'authorization_code',
         'refresh_token',
         'client_credentials'
     );
+    
+    /**
+     * The grant type being used 
+     *@var string $grant_type
+     */
+    private $grant_type;
 
+    /**
+     * The authenticating institutionId
+     *@var integer $authenticatingInstitutionId
+     */
     private $authenticatingInstitutionId;
 
+    /**
+     * The content institution id
+     * @var integer $contextInstitutionId
+     */
     private $contextInstitutionId;
 
+    /**
+     * The redirect uri
+     * @var string $redirectUri
+     */
     private $redirectUri;
 
+    /**
+     * An array of scopes
+     * @var array $scope
+     */
     private $scope;
     
+    /**
+     * The logger object
+     * @var unknown
+     */
     private $logger = null;
     
+    /**
+     * Whether or not to run in test mode
+     * @var boolean
+     */
     private $testMode = false;
     
+    /**
+     * An array of headers
+     * @var array $headers
+     */
     private $headers;
 
+    /**
+     * The url for requesting the Access token 
+     * @var string $accessTokenUrl
+     */
     private $accessTokenUrl;
 
-    public static $lastRequest = null;
-
+    /**
+     * WSKey
+     *@var OCLC\Auth\WSKey $wskey
+     */
     private $wskey = null;
-
+    
+    /**
+     * User
+     * @var OCLC\User $user
+     */
     private $user = null;
 
+    
+    /**
+     * The error code returned
+     * @var string $errorCode
+     */
     private $errorCode;
 
+    /**
+     * The error message from the WWW-Authenticate header
+     *@var string $errorWWWAuthenticate
+     */
     private $errorWWWAuthenticate;
 
+    /**
+     * The human readable error message 
+     *@var string $errorMessage
+     */
     private $errorMessage;
 
+    /**
+     * The JSON response
+     *@var string $response
+     */
     private $response = null;
 
+    /**
+     * The Access token type
+     * @var string $type
+     */
     private $type = null;
 
+    /**
+     * The access token string value 
+     *@var string $accessTokenString
+     */
     private $accessTokenString = null;
 
+    /**
+     * How many milliseconds in which the Access token expires
+     *@var integer $expiresIn
+     */
     private $expiresIn = null;
 
+    /**
+     * The time in UTC when the Access Token Expires
+     * @var string $expiresAt
+     */
     private $expiresAt = null;
 
+    /**
+     * The Refresh token associated with the Access Token
+     *@var OCLC\Auth\RefreshToken $refreshToken
+     */
     private $refreshToken = null;
     
     /**
@@ -194,6 +272,7 @@ class AccessToken
     /**
      * Get Value of Access Token
      *
+     * @param boolean $autoRefresh
      * @return string
      */
     public function getValue($autoRefresh = true)
@@ -267,7 +346,7 @@ class AccessToken
     /**
      * Construct a new Access Token
      *
-     * @param string $grant_type
+     * @param string $grantType
      *            - there are three possible values: authorization_code, client_credentials, or refresh_token.
      *            Each of these require different options be set in the constructor
      *            - authorization_code
@@ -288,7 +367,7 @@ class AccessToken
      *            - expiresAt
      *            - logger
      */
-    function __construct($grantType, $options)
+    public function __construct($grantType, $options)
     {
         if (empty($grantType) || ! in_array($grantType, static::$validGrantTypes)) {
             throw new \LogicException('You must pass a valid grant type to construct an Access Token');
@@ -351,6 +430,10 @@ class AccessToken
         self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger);
     }
 
+    /**
+     * Refresh the current Access Token
+     * @throws \LogicException
+     */
     public function refresh()
     {
         if (empty($this->wskey)) {
@@ -367,6 +450,13 @@ class AccessToken
         $this->errorMessage = null;
         self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger);
     }
+    
+    /**
+     * Make the request for an Access Token
+     * @param string $authorization
+     * @param string $url
+     * @param string $logger
+     */
 
     private function requestAccessToken($authorization, $url, $logger = null)
     {   
