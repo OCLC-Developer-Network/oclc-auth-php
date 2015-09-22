@@ -221,29 +221,24 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @vcr accessTokenFailure401
+     * @expectedException Exception
+     * @expectedExceptionMessage 401
      * testProcessBadAuthServerResponse401
      */
     function testProcessBadAuthServerResponse401()
     {
         $this->accessToken->create($this->wskey);
-        
-        $this->assertAttributeInternalType('string', 'errorCode', $this->accessToken);
-        $this->assertAttributeEquals('401', 'errorCode', $this->accessToken);
     }
     
     /**
      * @vcr accessTokenFailure403
+     * @expectedException Exception
+     * @expectedExceptionMessage 403 unauthorized_client
      * testProcessBadAuthServerResponse403
      */
 
     function testProcessBadAuthServerResponse403()
     {
         $this->accessToken->create($this->wskey);
-        
-        $this->assertAttributeInternalType('string', 'errorCode', $this->accessToken);
-        $this->assertAttributeEquals('403', 'errorCode', $this->accessToken);
-        
-        $this->assertAttributeInternalType('string', 'errorMessage', $this->accessToken);
-        $this->assertAttributeEquals('unauthorized_client', 'errorMessage', $this->accessToken);
     }
 }

@@ -156,25 +156,6 @@ class AccessToken
      */
     private $user = null;
 
-    
-    /**
-     * The error code returned
-     * @var string $errorCode
-     */
-    private $errorCode;
-
-    /**
-     * The error message from the WWW-Authenticate header
-     *@var string $errorWWWAuthenticate
-     */
-    private $errorWWWAuthenticate;
-
-    /**
-     * The human readable error message 
-     *@var string $errorMessage
-     */
-    private $errorMessage;
-
     /**
      * The JSON response
      *@var string $response
@@ -218,27 +199,7 @@ class AccessToken
     public function getAccessTokenUrl(){
         return $this->accessTokenUrl;
     }
-
-    /**
-     * Get Error Code
-     *
-     * @return string
-     */
-    public function getErrorCode()
-    {
-        return $this->errorCode;
-    }
     
-    /**
-     * Get Error Message
-     *
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->errorMessage;
-    }
-
     /**
      * Get Context Institution ID
      *
@@ -446,8 +407,6 @@ class AccessToken
         $this->accessTokenString = null;
         $this->expiresIn = null;
         $this->expiresAt = null;
-        $this->errorCode = null;
-        $this->errorMessage = null;
         self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger);
     }
     
@@ -488,16 +447,17 @@ class AccessToken
             $response = \Guzzle::post($url, $guzzleOptions);
             self::parseTokenResponse($response->json());
         } catch (\Guzzle\Http\Exception\BadResponseException $error) {
-            $this->errorCode = (string) $error->getResponse()->getStatusCode();
-            $this->response = $error->getResponse()->getBody(true);
-            $responseBody = json_decode($this->response, true);
+            $errorCode = (string) $error->getResponse()->getStatusCode();
+            $response = $error->getResponse()->getBody(true);
+            $responseBody = json_decode($response, true);
             if (isset($responseBody['message'])){
-                $this->errorMessage = $responseBody['message'];
+                $errorMessage = $responseBody['message'];
             } elseif (isset($responseBody['error']['errorMessage'])) {
-                $this->errorMessage = $responseBody['error']['errorMessage'];
+                $errorMessage = $responseBody['error']['errorMessage'];
             } else {
-                $this->errorMessage = $this->response;
+                $errorMessage = $this->response;
             }
+            Throw new \Exception($errorCode . ' ' . $errorMessage);
         }
     }
 
