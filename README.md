@@ -71,7 +71,7 @@ Basic Example: Use an HMAC Signature on a request to the [WorldCat Metadata API]
    $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
     
    $client = new Client();
-   $client->getClient()->setDefaultOption('config/curl/' . CURLOPT_SSLVERSION, 3);
+   $client->setDefaultOption('config/curl/' . CURLOPT_SSLVERSION, 3);
    $headers = array();
    $headers['Authorization'] = $authorizationHeader;
    $request = $client->createRequest('GET', $url, $headers);
