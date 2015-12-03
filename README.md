@@ -54,6 +54,7 @@ require_once('vendor/autoload.php');
 Basic Example: Use an HMAC Signature on a request to the [WorldCat Metadata API](http://www.oclc.org/developer/develop/web-services/worldcat-metadata-api.en.html)
 ```php
 <?php
+   require_once('vendor/autoload.php');
    use OCLC\Auth\WSKey;
    use OCLC\User;
    use Guzzle\Http\Client;
