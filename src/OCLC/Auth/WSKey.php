@@ -251,12 +251,22 @@ class WSKey
      * @param integer $context_institution_id            
      * @return string The Login URL used with OCLC's OAuth 2 implementation of the Explicit Authorization Flow
      */
-    public function getLoginURL($authenticating_institution_id, $context_institution_id)
+    public function getLoginURL($authenticating_institution_id = null, $context_institution_id = null)
     {
         if ($this->testMode == false && empty($this->services)){
             Throw new \BadMethodCallException('You must pass an array of at least one service');
         }
-        $auth_code = new AuthCode($this->key, $authenticating_institution_id, $context_institution_id, $this->redirectUri, $this->services, $this->testMode);
+        
+        $options = array();
+        $options['testMode'] = $this->testMode;
+        if (isset ($authenticating_institution_id)){
+            $options['authenticatingInstitutionId'] = $authenticating_institution_id; 
+        }
+        if (isset($context_institution_id)){
+            $options['contextInstitutionId'] = $context_institution_id;
+        }
+        
+        $auth_code = new AuthCode($this->key, $this->redirectUri, $this->services, $options);
         return $auth_code->getLoginURL();
     }
 
