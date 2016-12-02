@@ -24,7 +24,6 @@ use Guzzle\Http\Client;
 use Guzzle\Plugin\History\HistoryPlugin;
 use OCLC\Auth\WSKey;
 use OCLC\User;
-use Symfony\Component\Translation\Tests\String;
 /**
  * A class that represents a client's OCLC Refresh Token.
  *
