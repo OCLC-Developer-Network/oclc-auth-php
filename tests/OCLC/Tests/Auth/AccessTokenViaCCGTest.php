@@ -46,7 +46,9 @@ class AccessTokenViaCCGTest extends \PHPUnit_Framework_TestCase
             'secret',
             $wskeyOptions
         );
-        $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
+        $this->wskey = $this->getMockBuilder(WSkey::class)
+        	->setConstructorArgs($wskeyArgs)
+        	->getMock();;
         
         $this->options = array(
             'authenticatingInstitutionId' => 128807,
@@ -93,18 +95,26 @@ class AccessTokenViaCCGTest extends \PHPUnit_Framework_TestCase
 
     function testCreateWithClientCredentials()
     {
-        $user = $this->getMock('OCLC\User', null, array(
+        $userArgs = array(
             128807,
             'principalID',
             'principalIDNS'
-        ));
+        );
+        
+        $user = $this->getMockBuilder(User::class)
+        	->setConstructorArgs($userArgs)
+        	->getMock();
+        
         $accessTokenArgs = array(
             'client_credentials',
             $this->options
         );
-        $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
-            'create'
-        ), $accessTokenArgs);
+        
+        $accessTokenMock = $this->getMockBuilder(AccessToken::class)
+        	->setMethods(['create'])
+        	->setConstructorArgs($accessTokenArgs)
+        	->getMock();
+        
         $accessTokenMock->expects($this->once())
             ->method('create')
             ->with($this->isInstanceOf('OCLC\Auth\WSKey'), $this->isInstanceOf('OCLC\User'))
@@ -118,9 +128,12 @@ class AccessTokenViaCCGTest extends \PHPUnit_Framework_TestCase
             'client_credentials',
             $this->options
         );
-        $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
-            'create'
-        ), $accessTokenArgs);
+        
+        $accessTokenMock = $this->getMockBuilder(AccessToken::class)
+        	->setMethods(['create'])
+        	->setConstructorArgs($accessTokenArgs)
+        	->getMock();
+        
         $accessTokenMock->expects($this->once())
             ->method('create')
             ->with($this->isInstanceOf('OCLC\Auth\WSKey'))

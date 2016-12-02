@@ -47,7 +47,9 @@ class AccessTokenViaRefreshTokenTest extends \PHPUnit_Framework_TestCase
             'secret',
             $wskeyOptions
         );
-        $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
+        $this->wskey = $this->getMockBuilder(WSkey::class)
+        	->setConstructorArgs($wskeyArgs)
+        	->getMock();;
         
         $this->refreshToken = new refreshToken('rt_239308230', '15000', '2018-08-23 18:45:29Z');
         $this->options = array(
@@ -87,9 +89,12 @@ class AccessTokenViaRefreshTokenTest extends \PHPUnit_Framework_TestCase
             'refresh_token',
             $this->options
         );
-        $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
-            'create'
-        ), $accessTokenArgs);
+        
+        $accessTokenMock = $this->getMockBuilder(AccessToken::class)
+        	->setMethods(['create'])
+        	->setConstructorArgs($accessTokenArgs)
+        	->getMock();
+        
         $accessTokenMock->expects($this->once())
             ->method('create')
             ->with($this->isInstanceOf('OCLC\Auth\WSKey'))

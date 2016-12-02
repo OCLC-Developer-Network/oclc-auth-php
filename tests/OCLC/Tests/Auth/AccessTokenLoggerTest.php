@@ -52,7 +52,10 @@ class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
             'secret',
             $wskeyOptions
         );
-        $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
+        
+        $this->wskey = $this->getMockBuilder(WSkey::class)
+        	->setConstructorArgs($wskeyArgs)
+        	->getMock();
         
         $this->options = array(
             'authenticatingInstitutionId' => 128807,
