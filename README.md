@@ -20,7 +20,7 @@ Sample Composer file
   ],
   "require" : 
   {
-    "OCLC/Auth" : ">=1.0"
+    "OCLC/Auth" : ">=3.0"
   }
 }
 ```
@@ -57,7 +57,8 @@ Basic Example: Use an HMAC Signature on a request to the [WorldCat Metadata API]
    require_once('vendor/autoload.php');
    use OCLC\Auth\WSKey;
    use OCLC\User;
-   use Guzzle\Http\Client;
+   use GuzzleHttp\Client;
+   use GuzzleHttp\Exception\RequestException;
    
    $key = 'api-key';
    $secret = 'api-key-secret';
@@ -70,18 +71,20 @@ Basic Example: Use an HMAC Signature on a request to the [WorldCat Metadata API]
    
    $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
     
-   $client = new Client();
-   $client->setDefaultOption('config/curl/' . CURLOPT_SSLVERSION, 3);
+   $client = new Client(
+       [
+        'curl' => [
+            CURLOPT_SSLVERSION => '3'
+       ]]
+   );
    $headers = array();
    $headers['Authorization'] = $authorizationHeader;
-   $request = $client->createRequest('GET', $url, $headers);
    
    try {
-        $response = $request->send();
+        $response = $client->request('GET', $url, ['headers' => $headers]);
         echo $response->getBody(TRUE);
-   } catch (\Guzzle\Http\Exception\BadResponseException $error) {
+   } catch (RequestException $error) {
         echo $error->getResponse()->getStatusCode();
-        echo $error->getResponse()->getWwwAuthenticate();
         echo $error->getResponse()->getBody(true);
    }
 ?>

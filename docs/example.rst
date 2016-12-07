@@ -23,7 +23,8 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
 
    use OCLC\Auth\WSKey;
    use OCLC\User;
-   use Guzzle\Http\Client;
+   use GuzzleHttp\Client;
+   use GuzzleHttp\Exception\RequestException;
    
    $key = 'api-key';
    $secret = 'api-key-secret';
@@ -36,18 +37,20 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
    
    $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
     
-   $client = new Client();
-   $client->setDefaultOption('config/curl/' . CURLOPT_SSLVERSION, 3);
+   $client = new Client(
+       [
+        'curl' => [
+            CURLOPT_SSLVERSION => '3'
+       ]]
+   );
    $headers = array();
    $headers['Authorization'] = $authorizationHeader;
-   $request = $client->createRequest('GET', $url, $headers);
    
    try {
-        $response = $request->send();
+        $response = $client->request('GET', $url, ['headers' => $headers]);
         echo $response->getBody(TRUE);
-   } catch (\Guzzle\Http\Exception\BadResponseException $error) {
+   } catch (RequestException $error) {
         echo $error->getResponse()->getStatusCode();
-        echo $error->getResponse()->getWwwAuthenticate();
         echo $error->getResponse()->getBody(true);
    }
    
@@ -116,9 +119,9 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
    */
 
    use OCLC\Auth\WSKey;
-   use OCLC\Auth\AccessToken;
    use OCLC\User;
-   use Guzzle\Http\Client;
+   use GuzzleHttp\Client;
+   use GuzzleHttp\Exception\RequestException;
    
    /* setup the key, secret variables. Build an array of the IDs of the services you want to access */ 
    $key = 'api-key';
@@ -156,17 +159,20 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
       
       /* Retrieve a user object from the Access Token */   
       $user = $accessToken->getUser();
-      
-      /* Get an HMAC Signature from your WSKey object using the method, url and options array which contains the OCLC\User object */
-      $options = array('user'=> $user);
-      
-      $authorizationHeader = $wskey->getHMACSignature('GET', $url, $options);
        
-      $client = new Client();
-      $client->setDefaultOption('config/curl/' . CURLOPT_SSLVERSION, 3);
+      $client = new Client(
+         [
+         'curl' => [
+               CURLOPT_SSLVERSION => '3'
+          ]]
+      );
       $headers = array();
-      $headers['Authorization'] = $authorizationHeader;
-      $request = $client->createRequest('GET', $url, $headers);
-      $response = $request->send();
-      echo $response->getBody(TRUE);
+      $headers['Authorization'] = 'Bearer ' . $accessToken->getValue() . ', principalID="' . $user->getPrincipalID() .'", principalIDNS="' . $user->getPrincipalIDNS . '"';
+      try {
+         $response = $client->request('GET', $url, ['headers' => $headers]);
+         echo $response->getBody(TRUE);
+      } catch (RequestException $error) {
+         echo $error->getResponse()->getStatusCode();
+         echo $error->getResponse()->getBody(true);
+      }
    }
