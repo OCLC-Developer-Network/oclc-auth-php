@@ -46,7 +46,9 @@ class AccessTokenViaAuthCodeTest extends \PHPUnit_Framework_TestCase
             'secret',
             $wskeyOptions
         );
-        $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
+        $this->wskey = $this->getMockBuilder(WSkey::class)
+        	->setConstructorArgs($wskeyArgs)
+        	->getMock();
         
         $this->options = array(
             'authenticatingInstitutionId' => 128807,
@@ -113,9 +115,12 @@ class AccessTokenViaAuthCodeTest extends \PHPUnit_Framework_TestCase
             'authorization_code',
             $this->options
         );
-        $accessTokenMock = $this->getMock('OCLC\Auth\AccessToken', array(
-            'create'
-        ), $accessTokenArgs);
+        
+        $accessTokenMock = $this->getMockBuilder(AccessToken::class)
+        	->setMethods(['create'])
+        	->setConstructorArgs($accessTokenArgs)
+        	->getMock();
+        
         $accessTokenMock->expects($this->once())
             ->method('create')
             ->with($this->isInstanceOf('OCLC\Auth\WSKey'))

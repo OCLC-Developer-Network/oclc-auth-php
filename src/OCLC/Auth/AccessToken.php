@@ -19,11 +19,14 @@
 */
 namespace OCLC\Auth;
 
-use Guzzle\Http\Client;
-use Guzzle\Plugin\History\HistoryPlugin;
-use Guzzle\Plugin\Mock\MockPlugin;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use OCLC\Auth\WSKey;
 use OCLC\User;
+
 /**
  * A class that represents a client's OCLC Access Token.
  * An Access Token typically represents the rights of an application
@@ -336,9 +339,9 @@ class AccessToken
             throw new \BadMethodCallException('You must pass at least one option to construct an Access Token');
         }elseif (!empty($options['accessTokenString']) && empty($options['expiresAt'])){
             throw new \BadMethodCallException('You must pass an expires_at when passing an Access Token string');
-        }elseif (isset($options['logger']) && !is_a($options['logger'], 'Guzzle\Plugin\Log\LogPlugin')){
-            Throw new \BadMethodCallException('The logger must be a valid Guzzle\Plugin\Log\LogPlugin object');
-        }
+        }elseif (isset($options['logger']) && !is_a($options['logger'], 'Psr\Log\LoggerInterface')){
+        	Throw new \BadMethodCallException('The logger must be an object that uses a valid Psr\Log\LoggerInterface interface');
+        }            
         
         $this->grantType = $grantType;
         
@@ -436,17 +439,21 @@ class AccessToken
         }
         
         if (isset($logger)){
-            $guzzleOptions['plugins'] = array($logger);
+        	$stack = HandlerStack::create();
+        	$stack->push(
+        			Middleware::log(
+        					$logger,
+        					new MessageFormatter('{req_body} - {res_body}')
+        					)
+        			);
+            $guzzleOptions['handler'] = $stack;
         }
         
-        if (!class_exists('Guzzle')) {
-            \Guzzle\Http\StaticClient::mount();
-        }
-        
+       $client = new Client($guzzleOptions); 
         try {
-            $response = \Guzzle::post($url, $guzzleOptions);
-            self::parseTokenResponse($response->json());
-        } catch (\Guzzle\Http\Exception\BadResponseException $error) {
+            $response = $client->post($url);
+            self::parseTokenResponse($response->getBody());
+        } catch (RequestException $error) {
             $errorCode = (string) $error->getResponse()->getStatusCode();
             $response = $error->getResponse()->getBody(true);
             $responseBody = json_decode($response, true);
@@ -492,7 +499,7 @@ class AccessToken
      */
     private function parseTokenResponse($responseJSON)
     {
-        $this->response = $responseJSON;
+        $this->response = json_decode($responseJSON, true);
         $this->accessTokenString = $this->response['access_token'];
         $this->expiresIn = $this->response['expires_in'];
         if (isset($this->response['expires_at'])) {

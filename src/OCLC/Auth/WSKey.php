@@ -157,8 +157,8 @@ class WSKey
                 Throw new \BadMethodCallException('You must pass a valid redirectUri');
             } elseif (isset($options['services']) && (empty($options['services']) || ! (is_array($options['services'])))) {
                 Throw new \BadMethodCallException('You must pass an array of at least one service');
-            }elseif (isset($options['logger']) && !is_a($options['logger'], 'Guzzle\Plugin\Log\LogPlugin')){
-                Throw new \BadMethodCallException('The logger must be a valid Guzzle\Plugin\Log\LogPlugin object');
+            }elseif (isset($options['logger']) && !is_a($options['logger'], 'Psr\Log\LoggerInterface')){
+            	Throw new \BadMethodCallException('The logger must be an object that uses a valid Psr\Log\LoggerInterface interface');
             }
             
             foreach ($options as $name => $value) {

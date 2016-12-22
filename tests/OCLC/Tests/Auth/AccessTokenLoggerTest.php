@@ -18,11 +18,9 @@ namespace OCLC\Tests\Auth;
 use OCLC\Auth\WSKey;
 use OCLC\Auth\AccessToken;
 use OCLC\User;
-use Guzzle\Log\Zf2LogAdapter;
-use Guzzle\Plugin\Log\LogPlugin;
-use Guzzle\Log\MessageFormatter;
 use Zend\Log\Writer\Mock;
 use Zend\Log\Logger;
+use Zend\Log\PsrLoggerAdapter;
 
 class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,8 +42,7 @@ class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
         $this->logMock = new Mock();
         $logger = new Logger();
         $logger->addWriter($this->logMock);
-        $adapter = new Zf2LogAdapter($logger);
-        $logPlugin = new LogPlugin($adapter, MessageFormatter::DEBUG_FORMAT);
+        $psrLogger = new PsrLoggerAdapter($logger);
         
         $wskeyOptions = array(
             'services' => static::$services
@@ -55,13 +52,16 @@ class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
             'secret',
             $wskeyOptions
         );
-        $this->wskey = $this->getMock('OCLC\Auth\WSKey', null, $wskeyArgs);
+        
+        $this->wskey = $this->getMockBuilder(WSkey::class)
+        	->setConstructorArgs($wskeyArgs)
+        	->getMock();
         
         $this->options = array(
             'authenticatingInstitutionId' => 128807,
             'contextInstitutionId' => 128807,
             'scope' => static::$services,
-            'logger' => $logPlugin
+            'logger' => $psrLogger
         );
         $this->accessToken = new AccessToken('client_credentials', $this->options);
         
@@ -104,7 +104,7 @@ class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
     
     function testAccess_token_LoggerSet()
     {
-        $this->assertAttributeInstanceOf('Guzzle\Plugin\Log\LogPlugin', 'logger', $this->accessToken);
+        $this->assertAttributeInstanceOf('Psr\Log\LoggerInterface', 'logger', $this->accessToken);
     }
 
     /**
@@ -120,9 +120,9 @@ class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException LogicException
-     * @expectedExceptionMessage The logger must be a valid Guzzle\Plugin\Log\LogPlugin object
+     * @expectedExceptionMessage The logger must be an object that uses a valid Psr\Log\LoggerInterface interface
      */
-    function testInvalidGrantType()
+    function testNotValidLoggerInterface()
     {
         $options = array(
             'authenticatingInstitutionId' => 128807,

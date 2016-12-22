@@ -18,11 +18,9 @@ namespace OCLC\Tests\Auth;
 use OCLC\Auth\WSKey;
 use OCLC\Auth\AccessToken;
 use OCLC\User;
-use Guzzle\Log\Zf2LogAdapter;
-use Guzzle\Plugin\Log\LogPlugin;
-use Guzzle\Log\MessageFormatter;
 use Zend\Log\Writer\Mock;
 use Zend\Log\Logger;
+use Zend\Log\PsrLoggerAdapter;
 
 class WSKeyLoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,12 +42,11 @@ class WSKeyLoggerTest extends \PHPUnit_Framework_TestCase
         $this->logMock = new Mock();
         $logger = new Logger();
         $logger->addWriter($this->logMock);
-        $adapter = new Zf2LogAdapter($logger);
-        $logPlugin = new LogPlugin($adapter, MessageFormatter::DEBUG_FORMAT);
+        $psrLogger = new PsrLoggerAdapter($logger);
         
         $this->options = array(
             'services' => static::$services,
-            'logger' => $logPlugin
+            'logger' => $psrLogger
         );
         
         $this->wskey = new WSKey('test', 'secret', $this->options);
@@ -79,7 +76,7 @@ class WSKeyLoggerTest extends \PHPUnit_Framework_TestCase
     
     function testLoggerSet()
     {
-        $this->assertAttributeInstanceOf('Guzzle\Plugin\Log\LogPlugin', 'logger', $this->wskey);
+        $this->assertAttributeInstanceOf('Psr\Log\LoggerInterface', 'logger', $this->wskey);
     }
     
     /**
@@ -120,9 +117,9 @@ class WSKeyLoggerTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException BadMethodCallException
-     * @expectedExceptionMessage The logger must be a valid Guzzle\Plugin\Log\LogPlugin object
+     * @expectedExceptionMessage The logger must be an object that uses a valid Psr\Log\LoggerInterface interface
      */
-    function testNotArrayServices()
+    function testNotValidLoggerInterface()
     {
         $options = array(
             'services' => static::$services,
