@@ -225,7 +225,7 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
     /**
      * @vcr accessTokenFailure401
      * @expectedException Exception
-     * @expectedExceptionMessage 401
+     * @expectedExceptionMessage 401 WSKey test is invalid
      * testProcessBadAuthServerResponse401
      */
     function testProcessBadAuthServerResponse401()
@@ -241,6 +241,29 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
      */
 
     function testProcessBadAuthServerResponse403()
+    {
+        $this->accessToken->create($this->wskey);
+    }
+    
+    /**
+     * @vcr accessTokenFailure401_old
+     * @expectedException Exception
+     * @expectedExceptionMessage 401
+     * testProcessBadAuthServerResponse401
+     */
+    function testProcessBadAuthServerResponse401Old()
+    {
+        $this->accessToken->create($this->wskey);
+    }
+    
+    /**
+     * @vcr accessTokenFailure403_old
+     * @expectedException Exception
+     * @expectedExceptionMessage 403 unauthorized_client
+     * testProcessBadAuthServerResponse403
+     */
+    
+    function testProcessBadAuthServerResponse403Old()
     {
         $this->accessToken->create($this->wskey);
     }

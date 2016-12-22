@@ -456,13 +456,21 @@ class AccessToken
         } catch (RequestException $error) {
             $errorCode = (string) $error->getResponse()->getStatusCode();
             $response = $error->getResponse()->getBody(true);
-            $responseBody = json_decode($response, true);
-            if (isset($responseBody['message'])){
-                $errorMessage = $responseBody['message'];
-            } elseif (isset($responseBody['error']['errorMessage'])) {
-                $errorMessage = $responseBody['error']['errorMessage'];
-            } else {
-                $errorMessage = $this->response;
+            
+            if (implode($error->getResponse()->getHeader('Content-Type')) == 'application/json'){
+                $responseBody = json_decode($response, true);
+                
+                if (json_last_error() === JSON_ERROR_NONE){
+                    if (isset($responseBody['message'])){
+                        $errorMessage = $responseBody['message'];
+                    } else {
+                        $errorMessage = $responseBody['error']['errorMessage'];
+                    }  
+                } else {
+                    $errorMessage= 'Malformed JSON in response';
+                }
+            } else{
+                $errorMessage = implode($error->getResponse()->getHeader('Content-Type'));
             }
             Throw new \Exception($errorCode . ' ' . $errorMessage);
         }
