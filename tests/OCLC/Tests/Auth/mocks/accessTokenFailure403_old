@@ -1,7 +1,7 @@
 -
     request:
         method: POST
-        url: 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=client_credentials&authenticatingInstitutionId=128807&contextInstitutionId=128807&scope=WMS_NCIP%20WMS_ACQ'
+        url: 'https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=authorization_code&code=auth_12384794&authenticatingInstitutionId=128807&contextInstitutionId=128807'
         headers:
             Host: authn.sd00.worldcat.org
             User-Agent: 'Guzzle/3.8.1 curl/7.21.4 PHP/5.3.28, oclc-auth-php'
@@ -9,11 +9,9 @@
             Accept: application/json
             Content-Length: '0'
     response:
-        status: 401
+        status: 403
         headers:
-            Date: 'Tue, 01 Jul 2014 19:50:37 GMT'
-            Server: Apache
-            Content-Length: '1190'
+            Vary: 'Accept-Encoding, User-Agent'
+            Transfer-Encoding: chunked
             Content-Type: 'application/json'
-        body: "{\"code\":401,\"message\":\"WSKey test is invalid\"}"
-        
+        body: "{\"error\":{\"errorMessage\":\"unauthorized_client\",\"errorCode\":403}}"
