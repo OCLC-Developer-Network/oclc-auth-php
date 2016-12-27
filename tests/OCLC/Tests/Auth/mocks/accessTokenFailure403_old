@@ -13,5 +13,5 @@
         headers:
             Vary: 'Accept-Encoding, User-Agent'
             Transfer-Encoding: chunked
-            Content-Type: 'application/json'
+            Content-Type: 'application/json;charset=ISO-8859-1'
         body: "{\"error\":{\"errorMessage\":\"unauthorized_client\",\"errorCode\":403}}"

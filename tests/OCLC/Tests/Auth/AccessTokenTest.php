@@ -249,7 +249,7 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
      * @vcr accessTokenFailure401_old
      * @expectedException Exception
      * @expectedExceptionMessage 401
-     * testProcessBadAuthServerResponse401
+     * testProcessBadAuthServerResponse401Old
      */
     function testProcessBadAuthServerResponse401Old()
     {
@@ -260,10 +260,22 @@ class AccessTokenTest extends \PHPUnit_Framework_TestCase
      * @vcr accessTokenFailure403_old
      * @expectedException Exception
      * @expectedExceptionMessage 403 unauthorized_client
-     * testProcessBadAuthServerResponse403
+     * testProcessBadAuthServerResponse403Old
      */
     
     function testProcessBadAuthServerResponse403Old()
+    {
+        $this->accessToken->create($this->wskey);
+    }
+    
+    /**
+     * @vcr accessTokenFailure401xml
+     * @expectedException Exception
+     * @expectedExceptionMessage 401 Malformed JSON in response - Syntax error
+     * testProcessBadAuthServerResponse401XML
+     */
+    
+    function testProcessBadAuthServerResponse401XML()
     {
         $this->accessToken->create($this->wskey);
     }

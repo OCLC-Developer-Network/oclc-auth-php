@@ -19,11 +19,13 @@
 */
 namespace OCLC\Auth;
 
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\MessageFormatter;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\HandlerStack,
+    GuzzleHttp\Middleware,
+    GuzzleHttp\MessageFormatter,
+    GuzzleHttp\Client,
+    GuzzleHttp\Exception\RequestException,
+    GuzzleHttp\Psr7\Response,
+    GuzzleHttp\Psr7;
 use OCLC\Auth\WSKey;
 use OCLC\User;
 
@@ -457,7 +459,7 @@ class AccessToken
             $errorCode = (string) $error->getResponse()->getStatusCode();
             $response = $error->getResponse()->getBody(true);
             
-            if (implode($error->getResponse()->getHeader('Content-Type')) == 'application/json'){
+            if (implode($error->getResponse()->getHeader('Content-Type')) !== 'text/html'){
                 $responseBody = json_decode($response, true);
                 
                 if (json_last_error() === JSON_ERROR_NONE){
@@ -467,10 +469,10 @@ class AccessToken
                         $errorMessage = $responseBody['error']['errorMessage'];
                     }  
                 } else {
-                    $errorMessage= 'Malformed JSON in response';
+                     $errorMessage= 'Malformed JSON in response - ' . json_last_error_msg() . "\n" . $response;
                 }
             } else{
-                $errorMessage = implode($error->getResponse()->getHeader('Content-Type'));
+                $errorMessage = '';
             }
             Throw new \Exception($errorCode . ' ' . $errorMessage);
         }
