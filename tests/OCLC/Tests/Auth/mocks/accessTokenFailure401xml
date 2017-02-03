@@ -14,6 +14,6 @@
             Date: 'Tue, 01 Jul 2014 19:50:37 GMT'
             Server: Apache
             Content-Length: '1190'
-            Content-Type: 'application/json;charset=ISO-8859-1'
-        body: "{\"code\":{\"type\":\"http\", \"value\":\"401\"},\"message\":\"WSKey test is invalid\"}"
+            Content-Type: 'application/xml;charset=ISO-8859-1'
+        body: "<error><code type=\"http\">401</code><message>WSKey &apos;test&apos; is invalid</message></error>"
         
