@@ -53,7 +53,38 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
         echo $error->getResponse()->getStatusCode();
         echo $error->getResponse()->getBody(true);
    }
+  
+Example: Get Access Token with Client Credential Grant
+======================================================
+This example shows how to retrieve an Access Token using the Client Credential Grant pattern . It assumes that the Sandbox Institution is being interacted with
+
+.. code:: php
+
+   require_once('vendor/autoload.php');
    
+   /*
+   // installed via Phar
+   require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
+   
+   // installed via Zip
+   require_once '/PATH_TO_LIBRARY/autoload.php';
+   */
+
+   use OCLC\Auth\WSKey;
+   use OCLC\Auth\AccessToken;
+   use OCLC\User;
+    
+   $key = 'api-key';
+   $secret = 'api-key-secret';
+   $services = array('WMS_NCIP', 'WMS_ACQ');
+    
+   $user = new User('128807', 'principalID', 'principalIDNS'); 
+   $options = array('services' => $services);
+   $wskey = new WSKey($key, $secret, $options);
+    
+   $accessToken = $wskey->getAccessTokenWithClientCredentials(128807, 128807, $user);
+ 
+   echo 'Hello you have an Access Token - ' . $accessToken->getValue();
 
 Example: App protected by an OAuth 2 Explicit Authorization login
 =================================================================
@@ -99,6 +130,51 @@ This example shows how to login a user and return the Access Token associated wi
    } else {
       echo 'Hello you have an Access Token - ' . $_SESSION['AccessToken'];
    }
+   
+Example: App protected by an OAuth 2 Explicit Authorization login using WAYF
+============================================================================
+This example shows how to login a user and return the Access Token associated with their login to the screen. It assumes that the user's institution is unknown at the user needs to use a WAYF screen
+   
+.. code:: php
+
+   require_once('vendor/autoload.php');
+   
+   /*
+   // installed via Phar
+   require_once('phar://PATH_TO_THE_PHAR/oclc-auth.phar');
+   
+   // installed via Zip
+   require_once '/PATH_TO_LIBRARY/autoload.php';
+   */
+
+   use OCLC\Auth\WSKey;
+   use OCLC\Auth\AccessToken;
+   use OCLC\User;
+    
+   $key = 'api-key';
+   $secret = 'api-key-secret';
+   $services = array('WMS_NCIP', 'WMS_ACQ');
+   if (isset($_SERVER['HTTPS'])):
+      $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+   else:
+      $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+   endif;
+    
+   session_start();
+    
+   $options = array('services' => $services, 'redirectUri' => $redirect_uri);
+   $wskey = new WSKey($key, $secret, $options);
+    
+   if (empty($_SESSION['AccessToken']) && empty($_GET['code']) && empty($_GET['authenticatingInstitutionId'] && empty($_GET['contextInstitutionId'])) {
+      header("Location: " . $wskey->getLoginURL(), 'true', '303');
+   } elseif (isset($_GET['code']) && isset($_GET['authenticatingInstitutionId']) && isset($_GET['contextInstitutionId'])) {
+      $accessToken = $wskey->getAccessTokenWithAuthCode($_GET['code'], $_GET['authenticatingInstitutionId'], $_GET['contextInstitutionId']);
+    
+      $_SESSION['AccessToken'] = $accessToken->getValue();
+      echo 'Hello you have an Access Token - ' . $_SESSION['AccessToken'];
+   } else {
+      echo 'Hello you have an Access Token - ' . $_SESSION['AccessToken'];
+   }   
    
 Example: Read bib from WorldCat Metadata API protected by an OAuth 2 Explicit Authorization login
 =================================================================================================
