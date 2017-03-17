@@ -70,26 +70,32 @@ class AuthCode
     /**
      * Construct an Authorization Code object using
      *
-     * @param string $client_id            
-     * @param integer $authenticatingInstitutionId            
-     * @param integer $contextInstitutionId            
+     * @param string $client_id 
      * @param string $redirectUri            
-     * @param string $scope 
-     * @param boolean $testMode           
+     * @param array $scope
+     * @param array $options
+     *       
+     * - integer $authenticatingInstitutionId            
+     * - contextInstitutionId integer (optional)             
+     * - testMode boolean           
      */
-    public function __construct($client_id, $authenticatingInstitutionId, $contextInstitutionId, $redirectUri, $scope, $testMode = false)
+    public function __construct($client_id, $redirectUri, $scope, $options = null)
     {
-        $this->testMode = $testMode;
+        if (isset($options['testMode'])){
+            $this->testMode = $options['testMode'];
+        } else {
+            $this->testMode = false;
+        }
         
         if (empty($client_id)) {
             Throw new \BadMethodCallException('You must pass a valid key to construct an AuthCode');
-        } elseif ($this->testMode == false && empty($authenticatingInstitutionId)) {
-            Throw new \BadMethodCallException('You must pass an authenticatingInstitutionId');
-        } elseif ($this->testMode == false && ! (is_int($authenticatingInstitutionId))) {
+        } elseif ($this->testMode == false && isset($options['contextInstitutionId']) && empty($options['authenticatingInstitutionId'])) {
+            Throw new \BadMethodCallException('If you pass a contextInstitutionId, you must pass an authenticatingInstitutionId');
+        } elseif ($this->testMode == false && isset($options['authenticatingInstitutionId']) && ! (is_int($options['authenticatingInstitutionId']))) {
             Throw new \BadMethodCallException('You must pass a valid integer for the authenticatingInstitutionId');
-        } elseif ($this->testMode == false && empty($contextInstitutionId)) {
-            Throw new \BadMethodCallException('You must pass a contextInstitutionId');
-        } elseif ($this->testMode == false && ! (is_int($contextInstitutionId))) {
+        } elseif ($this->testMode == false && isset($options['authenticatingInstitutionId']) &&  empty($options['contextInstitutionId'])) {
+            Throw new \BadMethodCallException('If you pass an authenticatingInstitutionId, you must pass a contextInstitutionId');
+        } elseif ($this->testMode == false && isset($options['contextInstitutionId']) && ! (is_int($options['contextInstitutionId']))) {
             Throw new \BadMethodCallException('You must pass a valid integer for the contextInstitutionId');
         } elseif ($this->testMode == false && empty($redirectUri)) {
             Throw new \BadMethodCallException('You must pass a redirectUri');
@@ -100,8 +106,12 @@ class AuthCode
         }
         
         $this->clientId = $client_id;
-        $this->authenticatingInstitutionId = (int) $authenticatingInstitutionId;
-        $this->contextInstitutionId = (int) $contextInstitutionId;
+        if (isset($options['authenticatingInstitutionId'])){
+            $this->authenticatingInstitutionId = (int) $options['authenticatingInstitutionId'];
+        }
+        if (isset($options['contextInstitutionId'])){
+            $this->contextInstitutionId = (int) $options['contextInstitutionId'];
+        }
         $this->redirectUri = $redirectUri;
         $this->scope = $scope;
     }
@@ -114,7 +124,12 @@ class AuthCode
     public function getLoginUrl()
     {
         $loginURL = static::$authorizationServer . '/authorizeCode?client_id=' . $this->clientId;
-        $loginURL .= '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId . '&contextInstitutionId=' . $this->contextInstitutionId;
+        if (!empty($this->authenticatingInstitutionId)){
+            $loginURL .= '&authenticatingInstitutionId=' . $this->authenticatingInstitutionId;
+        }
+        if (!empty($this->contextInstitutionId)){
+            $loginURL .= '&contextInstitutionId=' . $this->contextInstitutionId;
+        }
         $loginURL .= '&redirect_uri=' . urlencode($this->redirectUri) . '&response_type=code';
         if (isset($this->scope)){
             $loginURL.= '&scope=' . implode($this->scope, ' ');

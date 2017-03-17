@@ -30,7 +30,7 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->authCode = new authCode('test', 1, 1, static::$redirect_uri, static::$services);
+        $this->authCode = new authCode('test', static::$redirect_uri, static::$services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1));
     }
 
     /**
@@ -80,8 +80,18 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
      */
     function testNoScopeGetLoginURL()
     {
-        $authCode = new authCode('test', 1, 1, static::$redirect_uri, null, true);
+        $authCode = new authCode('test', static::$redirect_uri, null, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1, 'testMode' => true));
         $url = 'https://authn.sd00.worldcat.org/oauth2/authorizeCode?client_id=test&authenticatingInstitutionId=1&contextInstitutionId=1&redirect_uri=' . urlencode(static::$redirect_uri) . '&response_type=code';
+        $this->assertEquals($authCode->getLoginURL(), $url);
+    }
+    
+    /**
+     * can get Login URL for WAYF screen
+     */
+    function testWAYFGetLoginURL()
+    {
+        $authCode = new authCode('test', static::$redirect_uri, static::$services);
+        $url = 'https://authn.sd00.worldcat.org/oauth2/authorizeCode?client_id=test&redirect_uri=' . urlencode(static::$redirect_uri) . '&response_type=code&scope=WMS_NCIP WMS_ACQ';
         $this->assertEquals($authCode->getLoginURL(), $url);
     }
     
@@ -94,16 +104,16 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
      */
     function testEmptyClientID()
     {
-        $this->authCode = new authCode('', 1, 1, static::$redirect_uri, static::$services);
+        $this->authCode = new authCode('', static::$redirect_uri, static::$services);
     }
 
     /**
      * @expectedException BadMethodCallException
-     * @expectedExceptionMessage You must pass an authenticatingInstitutionId
+     * @expectedExceptionMessage If you pass a contextInstitutionId, you must pass an authenticatingInstitutionId
      */
     function testBadAuthenticatingInstitutionIdEmpty()
     {
-        $this->authCode = new authCode('test', '', 1, static::$redirect_uri, static::$services);
+        $this->authCode = new authCode('test', static::$redirect_uri, static::$services, array('contextInstitutionId' => 1));
     }
 
     /**
@@ -112,16 +122,16 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
      */
     function testBadAuthenticatingInstitutionIdNotInteger()
     {
-        $this->authCode = new authCode('test', 's', 1, static::$redirect_uri, static::$services);
+        $this->authCode = new authCode('test', static::$redirect_uri, static::$services, array('authenticatingInstitutionId' => 's', 'contextInstitutionId' => 1));
     }
 
     /**
      * @expectedException BadMethodCallException
-     * @expectedExceptionMessage You must pass a contextInstitutionId
+     * @expectedExceptionMessage If you pass an authenticatingInstitutionId, you must pass a contextInstitutionId
      */
     function testBadContextInstitutionIdEmpty()
     {
-        $this->authCode = new authCode('test', 1, '', static::$redirect_uri, static::$services);
+        $this->authCode = new authCode('test', static::$redirect_uri, static::$services, array('authenticatingInstitutionId' => 1));
     }
 
     /**
@@ -130,7 +140,7 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
      */
     function testBadContextInstitutionIdNotInteger()
     {
-        $this->authCode = new authCode('test', 1, 's', static::$redirect_uri, static::$services);
+        $this->authCode = new authCode('test', static::$redirect_uri, static::$services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 's'));
     }
 
     /**
@@ -139,7 +149,7 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
      */
     function testBadRedirectURI()
     {
-        $this->authCode = new authCode('test', 1, 1, 'junk', static::$services);
+        $this->authCode = new authCode('test', 'junk', static::$services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1));
     }
 
     /**
@@ -149,7 +159,7 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
     function testEmptyArrayScope()
     {
         $services = array();
-        $this->authCode = new authCode('test', 1, 1, static::$redirect_uri, $services);
+        $this->authCode = new authCode('test', static::$redirect_uri, $services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1));
     }
 
     /**
@@ -159,6 +169,6 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
     function testNotArrayScope()
     {
         $services = ' ';
-        $this->authCode = new authCode('test', 1, 1, static::$redirect_uri, $services);
+        $this->authCode = new authCode('test', static::$redirect_uri, $services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1));
     }
 }
