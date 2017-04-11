@@ -60,6 +60,7 @@ class WSKey
         'redirectUri',
         'services',
         'logger',
+    	'logFormat',
         'testMode'
     );
     
@@ -106,6 +107,18 @@ class WSKey
     private $testMode = false;
     
     /**
+     * The logger object
+     * @var unknown
+     */
+    private $logger = null;
+    
+    /**
+     * The format to log in
+     * @var string
+     */
+    private $logFormat = null;
+    
+    /**
      * User object used when building an HMAC signature of using client credentials grant
      * @var OCLC\User $user
      */
@@ -140,7 +153,8 @@ class WSKey
      *            an array of three possible name/value pairs
      *            - redirect_uri: a string which is the redirect URI associated with the WSKey that will 'catch' the redirect back to your app after login
      *            - services: an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP
-     *            - logger: a Guzzle\Plugin\Log\LogPlugin object
+     *            - logger: an object that support a Psr\Log\LoggerInterface
+     *            - logFormat: a string which is the log format
      */
     public function __construct($key, $secret, $options = null)
     {
@@ -293,6 +307,7 @@ class WSKey
             'code' => $authCode,
             'redirectUri' => $this->redirectUri
         );
+        
         return $this->getAccessToken('authorization_code', $options);
     }
 
@@ -319,6 +334,7 @@ class WSKey
             'contextInstitutionId' => $contextInstitutionId,
             'scope' => $this->services
         );
+        
         return $this->getAccessToken('client_credentials', $options, $user);
     }
 
@@ -501,7 +517,10 @@ class WSKey
         AccessToken::$userAgent = static::$userAgent;
         AccessToken::$testServer = static::$testServer;
         if (isset($this->logger)){
-            $options['logger'] = $this->logger;
+        	$options['logger'] = $this->logger;
+        	if (isset($this->logFormat)){
+        		$options['logFormat'] = $this->logFormat;
+        	}
         }
         
         if (isset($this->testMode)){

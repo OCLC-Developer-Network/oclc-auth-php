@@ -116,6 +116,32 @@ class WSKeyLoggerTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @vcr accessTokenWithRefreshTokenSuccess
+     * can log getting an Access Token
+     */
+    
+    function testLoggerSpecifyFormat()
+    {
+    	$logMock = new Mock();
+    	$logger = new Logger();
+    	$logger->addWriter($logMock);
+    	$psrLogger = new PsrLoggerAdapter($logger);
+    	
+    	$options = array(
+    			'services' => static::$services,
+    			'logger' => $psrLogger,
+    			'logFormat' => 'Request - {method} - {uri} - {code}'
+    	);
+    	
+    	$wskey = new WSKey('test', 'secret', $options);
+    	$user = new User(128807, 'principalID','principalIDNS');
+    	$accessToken = $wskey->getAccessTokenWithClientCredentials(128807, 128807, $user);
+    	$this->assertAttributeInternalType('string','logFormat', $wskey);
+    	$this->assertNotEmpty($logMock);
+    	$this->assertContains('Request - POST - https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=client_credentials&authenticatingInstitutionId=128807&contextInstitutionId=128807&scope=WMS_NCIP%20WMS_ACQ%20refresh_token - 200', $logMock->events[0]['message']);
+    }
+    
+    /**
      * @expectedException BadMethodCallException
      * @expectedExceptionMessage The logger must be an object that uses a valid Psr\Log\LoggerInterface interface
      */

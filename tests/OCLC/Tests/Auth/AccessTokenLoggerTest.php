@@ -119,6 +119,45 @@ class AccessTokenLoggerTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @vcr accessTokenWithRefreshTokenSuccess
+     * can log getting an Access Token
+     */
+    
+    function testLoggerSpecifyFormat()
+    {
+    	$logMock = new Mock();
+    	$logger = new Logger();
+    	$logger->addWriter($logMock);
+    	$psrLogger = new PsrLoggerAdapter($logger);
+    	
+    	$wskeyOptions = array(
+    			'services' => static::$services
+    	);
+    	$wskeyArgs = array(
+    			'test',
+    			'secret',
+    			$wskeyOptions
+    	);
+    	
+    	$wskey = $this->getMockBuilder(WSkey::class)
+    	->setConstructorArgs($wskeyArgs)
+    	->getMock();
+    	
+    	$options = array(
+    			'authenticatingInstitutionId' => 128807,
+    			'contextInstitutionId' => 128807,
+    			'scope' => static::$services,
+    			'logger' => $psrLogger,
+    			'logFormat' => 'Request - {method} - {uri} - {code}'
+    	);
+    	$accessToken = new AccessToken('client_credentials', $options);
+    	$accessToken->create($wskey);
+    	$this->assertAttributeInternalType('string','logFormat', $accessToken);
+    	$this->assertNotEmpty($logMock);
+    	$this->assertContains('Request - POST - https://authn.sd00.worldcat.org/oauth2/accessToken?grant_type=client_credentials&authenticatingInstitutionId=128807&contextInstitutionId=128807&scope=WMS_NCIP%20WMS_ACQ%20refresh_token - 200', $logMock->events[0]['message']);
+    }
+    
+    /**
      * @expectedException LogicException
      * @expectedExceptionMessage The logger must be an object that uses a valid Psr\Log\LoggerInterface interface
      */

@@ -82,6 +82,7 @@ class AccessToken
         'accessTokenString',
         'expiresAt',
         'logger',
+    	'logFormat',	
         'testMode'
     );
     
@@ -130,6 +131,12 @@ class AccessToken
      * @var unknown
      */
     private $logger = null;
+    
+    /**
+     * The format to log in
+     * @var string
+     */
+    private $logFormat = null;
     
     /**
      * Whether or not to run in test mode
@@ -332,6 +339,7 @@ class AccessToken
      *            - accessTokenString
      *            - expiresAt
      *            - logger
+     *            - logFormat
      */
     public function __construct($grantType, $options)
     {
@@ -393,7 +401,7 @@ class AccessToken
             $options['user'] = $this->user;
         }
         $authorization = $wskey->getHMACSignature('POST', $this->accessTokenUrl, $options);
-        self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger);
+        self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger, $this->logFormat);
     }
 
     /**
@@ -412,7 +420,7 @@ class AccessToken
         $this->accessTokenString = null;
         $this->expiresIn = null;
         $this->expiresAt = null;
-        self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger);
+        self::requestAccessToken($authorization, $this->accessTokenUrl, $this->logger, $this->logFormat);
     }
     
     /**
@@ -422,7 +430,7 @@ class AccessToken
      * @param string $logger
      */
 
-    private function requestAccessToken($authorization, $url, $logger = null)
+    private function requestAccessToken($authorization, $url, $logger = null, $log_format = null)
     {   
         $guzzleOptions = array(
             'headers' => array(
@@ -441,11 +449,16 @@ class AccessToken
         }
         
         if (isset($logger)){
+        	if (isset($log_format)){
+        		$logFormat = $log_format;
+        	} else {
+        		$logFormat = 'Request: {request} \n Response: {response}';
+        	}
         	$stack = HandlerStack::create();
         	$stack->push(
         			Middleware::log(
         					$logger,
-        					new MessageFormatter('{req_body} - {res_body}')
+        					new MessageFormatter($logFormat)
         					)
         			);
             $guzzleOptions['handler'] = $stack;
