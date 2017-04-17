@@ -13,6 +13,9 @@ install:
 # omitting "script:" will default to phpunit
 script: vendor/bin/phpunit --configuration phpunit.xml --coverage-text
 
+after_success: 
+    - bash <(curl -s https://codecov.io/bash)  
+
 # configure notifications (email, IRC, campfire etc)
 notifications:
     email:

@@ -171,4 +171,13 @@ class AuthCodeTest extends \PHPUnit_Framework_TestCase
         $services = ' ';
         $this->authCode = new authCode('test', static::$redirect_uri, $services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1));
     }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass a redirectUri
+     */
+    function testNoRedirectURI()
+    {
+    	$this->authCode = new authCode('test', '', static::$services, array('authenticatingInstitutionId' => 1, 'contextInstitutionId' => 1));
+    }
 }

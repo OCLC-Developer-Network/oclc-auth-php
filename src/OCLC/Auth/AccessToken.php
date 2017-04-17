@@ -83,7 +83,8 @@ class AccessToken
         'expiresAt',
         'logger',
     	'logFormat',	
-        'testMode'
+        'testMode',
+    	'wskey'
     );
     
     /**
@@ -250,9 +251,7 @@ class AccessToken
      */
     public function getValue($autoRefresh = true)
     {
-        if (!empty($this->errorCode)) {
-            throw new \LogicException($this->errorCode . ' ' . $this->errorMessage);
-        }elseif ($autoRefresh && self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
+        if ($autoRefresh && self::isExpired() && (empty($this->refreshToken) || $this->refreshToken->isExpired())) {
             throw new \LogicException('Sorry you do not have a valid Access Token');
         } elseif ($autoRefresh && self::isExpired()) {
             self::refresh();
@@ -330,6 +329,7 @@ class AccessToken
      *            -- refresh_token option must be set
      * @param array $options
      *            - an associative array of options for constructing the Access Token. Possible indexes
+     *            - wskey - \OCLC\Auth\WSKey
      *            - scope - array of scopes
      *            - authenticatingInstitutionId
      *            - contextInstitutionId

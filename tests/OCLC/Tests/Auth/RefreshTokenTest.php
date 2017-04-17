@@ -80,4 +80,31 @@ class RefreshTokenTest extends \PHPUnit_Framework_TestCase
         $refreshToken = new refreshToken('rt_1234567', '0', '2013-08-23 18:45:29Z');
         $this->assertInstanceOf('OCLC\Auth\RefreshToken', $refreshToken);
     }
+    
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage You must pass a refresh token value, expires in and expires at parameters to construct a refresh token
+     */
+    function testNoRefreshToken()
+    {
+    	$refreshToken = new refreshToken('', '15000', '2013-08-23 18:45:29Z');
+    }
+    
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage You must pass a refresh token value, expires in and expires at parameters to construct a refresh token
+     */
+    function testNoExpiresIn()
+    {
+    	$refreshToken = new refreshToken('rt_1234567', null, '2013-08-23 18:45:29Z');
+    }
+    
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage You must pass a refresh token value, expires in and expires at parameters to construct a refresh token
+     */
+    function testNoExpiresAt()
+    {
+    	$refreshToken = new refreshToken('rt_1234567', '15000', '');
+    }
 }

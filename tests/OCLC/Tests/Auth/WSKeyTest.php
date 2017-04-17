@@ -176,6 +176,7 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         $this->wskey->setDebugTimestamp(1386968102);
         
         $this->assertEquals($this->wskey->getHMACSignature('GET', 'http://www.oclc.org/test'), $Signature);
+        $this->assertEquals('y0avD+LN2+UwehWjnezKgtECVcpD6a9ff7HBldQfKUQ=', $this->wskey->getSignedRequest());
     }
 
     function testgetHMACSignatureUser()
@@ -192,6 +193,7 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         );
         
         $this->assertEquals($this->wskey->getHMACSignature('GET', 'http://www.oclc.org/test', $options), $Signature);
+        $this->assertEquals('y0avD+LN2+UwehWjnezKgtECVcpD6a9ff7HBldQfKUQ=', $this->wskey->getSignedRequest());
     }
 
     function testgetHMACSignatureUser_ExtraAuthInfo()
@@ -211,6 +213,7 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         );
         
         $this->assertEquals($this->wskey->getHMACSignature('GET', 'http://www.oclc.org/test', $options), $Signature);
+        $this->assertEquals('y0avD+LN2+UwehWjnezKgtECVcpD6a9ff7HBldQfKUQ=', $this->wskey->getSignedRequest());
     }
     
     /**
@@ -347,5 +350,96 @@ class WSKeyTest extends \PHPUnit_Framework_TestCase
         );
         $this->wskey = new WSKey('test', 'secret', $options);
         $AccessToken = $this->wskey->getAccessTokenWithClientCredentials(128807, 128807);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass an authenticating_institution_id
+     */
+    function testNullAuthenticatingInstitutionCCG()
+    {
+    	$options = array(
+    			'redirectUri' => 'http://www.oclc.org/test',
+    			'services' => static::$services
+    	);
+    	$this->wskey = new WSKey('test', 'secret', $options);
+    	$AccessToken = $this->wskey->getAccessTokenWithClientCredentials(null, 128807);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass a context_institution_id
+     */
+    function testNullContextInstitutionCCG()
+    {
+    	$options = array(
+    			'redirectUri' => 'http://www.oclc.org/test',
+    			'services' => static::$services
+    	);
+    	$this->wskey = new WSKey('test', 'secret', $options);
+    	$AccessToken = $this->wskey->getAccessTokenWithClientCredentials(128807, null);
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass an authorization code
+     */
+    function testNullAuthCode()
+    {
+    	$options = array(
+    			'redirectUri' => 'http://www.oclc.org/test',
+    			'services' => static::$services
+    	);
+    	$this->wskey = new WSKey('test', 'secret', $options);
+    	$AccessToken = $this->wskey->getAccessTokenWithAuthCode('', 128807, 128807);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass an authenticating_institution_id
+     */
+    function testNullAuthenticatingInstitutionAuthCode()
+    {
+    	$options = array(
+    			'redirectUri' => 'http://www.oclc.org/test',
+    			'services' => static::$services
+    	);
+    	$this->wskey = new WSKey('test', 'secret', $options);
+    	$AccessToken = $this->wskey->getAccessTokenWithAuthCode('auth_12384794', null, 128807);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass a context_institution_id
+     */
+    function testNullContextInstitutionAuthCode()
+    {
+    	$options = array(
+    			'redirectUri' => 'http://www.oclc.org/test',
+    			'services' => static::$services
+    	);
+    	$this->wskey = new WSKey('test', 'secret', $options);
+    	$AccessToken = $this->wskey->getAccessTokenWithAuthCode('auth_12384794', 128807, null);
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass an HTTP Method to build an HMAC Signature
+     */
+    function testHMACNoMethod()
+    {
+    	$this->wskey->setDebugNonce('2382dbb7');
+    	$this->wskey->setDebugTimestamp(1386968102);
+    	
+    	$this->wskey->getHMACSignature('', 'http://www.oclc.org/test');
+    }
+    
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage You must pass a Request URL to build an HMAC Signature
+     */
+    function testHMACNoURL()
+    {
+    	$this->wskey->getHMACSignature('GET', '');
     }
 }

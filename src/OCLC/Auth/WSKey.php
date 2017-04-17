@@ -354,10 +354,7 @@ class WSKey
      */
     public function getHMACSignature($method, $request_url, $options = null)
     {
-        if (empty($this->secret)) {
-            // Throw an error if secret is missing
-            Throw new \BadMethodCallException('You must construct a WSKey with a secret to build an HMAC Signature');
-        } elseif (empty($method)) {
+		if (empty($method)) {
             // Throw an error if method or request_url are missing
             Throw new \BadMethodCallException('You must pass an HTTP Method to build an HMAC Signature');
         } elseif (empty($request_url)) {
