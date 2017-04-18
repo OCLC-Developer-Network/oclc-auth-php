@@ -15,7 +15,7 @@ script: vendor/bin/phpunit --configuration phpunit.xml --coverage-clover=coverag
 
 after_success: 
     - bash <(curl -s https://codecov.io/bash)
-    - phpdoc -d src  -t api_docs --template="clean"
+    - vendor/bin/phpdoc -d src  -t api_docs --template="clean"
 
 deploy:
   provider: pages
