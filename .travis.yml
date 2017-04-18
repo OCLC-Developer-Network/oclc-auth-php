@@ -14,7 +14,16 @@ install:
 script: vendor/bin/phpunit --configuration phpunit.xml --coverage-clover=coverage.xml
 
 after_success: 
-    - bash <(curl -s https://codecov.io/bash)  
+    - bash <(curl -s https://codecov.io/bash)
+    - phpdoc -d src  -t api_docs --template="clean"
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  local_dir: api_docs
+  on:
+    branch: master      
 
 # configure notifications (email, IRC, campfire etc)
 notifications:
