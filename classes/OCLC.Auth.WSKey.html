@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/OCLC.html">\OCLC</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">2</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1401379026"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1401379026" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1457354283"></a>
+                                <a href="../namespaces/OCLC.html" style="margin-left: 30px; padding-left: 0">OCLC</a>
+            </div>
+            <div id="namespace-1457354283" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-930505236"></a>
+                                <a href="../namespaces/OCLC.Auth.html" style="margin-left: 30px; padding-left: 0">Auth</a>
+            </div>
+            <div id="namespace-930505236" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/OCLC.Auth.AccessToken.html">AccessToken</a></li>
+                                                    <li class="class"><a href="../classes/OCLC.Auth.AuthCode.html">AuthCode</a></li>
+                                                    <li class="class"><a href="../classes/OCLC.Auth.RefreshToken.html">RefreshToken</a></li>
+                                                    <li class="class"><a href="../classes/OCLC.Auth.WSKey.html">WSKey</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/OCLC.User.html">User</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/OCLC.Auth.html">\OCLC\Auth</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\OCLC\Auth</small>WSKey</h1>
+                    <p><em>A class that represents a clients OCLC Web Service Key.</em></p>
+                    <p>The WSKey has a key and secret and has access to one or more OCLC Web Services.
+Optionally, it can include principal information in the form of a principal ID and IDNS that represent an user and a redirect URI to be used in the OAuth 2 login flows.
+The WSKey class is used to</p>
+<ul>
+<li>generate HMAC signatures</li>
+<li>return the login URL for the OCLC Explicit Authorization flow for requesting an AuthCode</li>
+<li>redeem an authorization code for an access token</li>
+<li>request an access token via a client credentials grant flow</li>
+</ul>
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getKey" class="">getKey()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getSecret" class="">getSecret()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getRedirectUri" class="">getRedirectUri()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getServices" class="">getServices()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_setDebugTimestamp" class="">setDebugTimestamp()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_setDebugNonce" class="">setDebugNonce()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getSignedRequest" class="">getSignedRequest()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getLoginURL" class="">getLoginURL()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getAccessTokenWithAuthCode" class="">getAccessTokenWithAuthCode()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getAccessTokenWithClientCredentials" class="">getAccessTokenWithClientCredentials()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getHMACSignature" class="">getHMACSignature()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_testServer" class="">$testServer</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_userAgent" class="">$userAgent</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_getAccessToken" class="">getAccessToken()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_validOptions" class="">$validOptions</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_signRequest" class="">signRequest()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_normalizeRequest" class="">normalizeRequest()</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#method_AddAuthParams" class="">AddAuthParams()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_key" class="">$key</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_secret" class="">$secret</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_redirectUri" class="">$redirectUri</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_services" class="">$services</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_debugTimestamp" class="">$debugTimestamp</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_debugNonce" class="">$debugNonce</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_testMode" class="">$testMode</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_logger" class="">$logger</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_logFormat" class="">$logFormat</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_user" class="">$user</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_bodyHash" class="">$bodyHash</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_authParams" class="">$authParams</a><br />
+                                                                    <a href="../classes/OCLC.Auth.WSKey.html#property_signedRequest" class="">$signedRequest</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Auth.WSKey.html"><div class="path-wrapper">Auth/WSKey.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">OCLC/Auth</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\OCLC\Auth\WSKey</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                    <p>Karen A. Coombs <a href="mailto:coombsk@oclc.org">coombsk@oclc.org</a></p>
+<pre><code>    See the OCLC/Auth documentation for examples.</code></pre>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_testServer" name="property_testServer" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$testServer</h3>
+                <pre class="signature">$testServer : \OCLC\Auth\binary</pre>
+                <p><em>Whether or not the application is interacting with a test server</em></p>
+                
+
+                                <h4>Type</h4>
+                \OCLC\Auth\binary
+                &mdash; static $testServer                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_userAgent" name="property_userAgent" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$userAgent</h3>
+                <pre class="signature">$userAgent : string</pre>
+                <p><em>The user agent to use when sending the request</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                &mdash; static $userAgent                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_validOptions" name="property_validOptions" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$validOptions</h3>
+                <pre class="signature">$validOptions : array</pre>
+                <p><em>An array of options values valid for constructor</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; static $validOptions                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_key" name="property_key" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$key</h3>
+                <pre class="signature">$key : string</pre>
+                <p><em>The string that represents your API key</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_secret" name="property_secret" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$secret</h3>
+                <pre class="signature">$secret : string</pre>
+                <p><em>The secret used when generating digital signatures</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_redirectUri" name="property_redirectUri" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$redirectUri</h3>
+                <pre class="signature">$redirectUri : string</pre>
+                <p><em>the redirect URI associated with the WSKey that will &#039;catch&#039; the redirect back to your app after login</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_services" name="property_services" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$services</h3>
+                <pre class="signature">$services : array</pre>
+                <p><em>An array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_debugTimestamp" name="property_debugTimestamp" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$debugTimestamp</h3>
+                <pre class="signature">$debugTimestamp : string</pre>
+                <p><em>a timestamp for debug purposes</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_debugNonce" name="property_debugNonce" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$debugNonce</h3>
+                <pre class="signature">$debugNonce : string</pre>
+                <p><em>a nonce for debug purposes</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_testMode" name="property_testMode" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$testMode</h3>
+                <pre class="signature">$testMode : boolean</pre>
+                <p><em>Whether or not to run in test mode</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_logger" name="property_logger" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$logger</h3>
+                <pre class="signature">$logger : \OCLC\Auth\unknown</pre>
+                <p><em>The logger object</em></p>
+                
+
+                                <h4>Type</h4>
+                \OCLC\Auth\unknown
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_logFormat" name="property_logFormat" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$logFormat</h3>
+                <pre class="signature">$logFormat : string</pre>
+                <p><em>The format to log in</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_user" name="property_user" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$user</h3>
+                <pre class="signature">$user : \OCLC\Auth\OCLC\User</pre>
+                <p><em>User object used when building an HMAC signature of using client credentials grant</em></p>
+                
+
+                                <h4>Type</h4>
+                \OCLC\Auth\OCLC\User
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_bodyHash" name="property_bodyHash" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$bodyHash</h3>
+                <pre class="signature">$bodyHash : string</pre>
+                <p><em>bodyHash of the request</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_authParams" name="property_authParams" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$authParams</h3>
+                <pre class="signature">$authParams : array</pre>
+                <p><em>an array of Authentication name/value pairs example username/testuser</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_signedRequest" name="property_signedRequest" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$signedRequest</h3>
+                <pre class="signature">$signedRequest : string</pre>
+                <p><em>The signed request</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(string  <span class="argument">$key</span>, string  <span class="argument">$secret</span>, array  <span class="argument">$options = null</span>) </pre>
+                <p><em>Construct a new Web Service key for use when authenticating to OCLC Web Services.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key </td>
+                                <td><p>the hashed string that represents your API key</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$secret </td>
+                                <td><p>a string which is the secret used when generating digital signatures</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$options </td>
+                                <td><p>an array of three possible name/value pairs</p>
+<ul>
+<li>redirect_uri: a string which is the redirect URI associated with the WSKey that will 'catch' the redirect back to your app after login</li>
+<li>services: an array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP</li>
+<li>logger: an object that support a Psr\Log\LoggerInterface</li>
+<li>logFormat: a string which is the log format</li>
+</ul></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getKey" name="method_getKey" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getKey()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getKey() : string</pre>
+                <p><em>getKey</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>the Hashed string that represents your API key</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSecret" name="method_getSecret" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSecret()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSecret() : string</pre>
+                <p><em>getSecret</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>the secret used when generating digital signatures</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getRedirectUri" name="method_getRedirectUri" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getRedirectUri()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getRedirectUri() : \OCLC\Auth\the</pre>
+                <p><em>getRedirect_uri</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \OCLC\Auth\the
+                                            &mdash; <p>redirect URI associated with the WSKey that will 'catch' the redirect back to your app after login</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getServices" name="method_getServices" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getServices()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getServices() : \OCLC\Auth\an</pre>
+                <p><em>getServices</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \OCLC\Auth\an
+                                            &mdash; <p>array of one or more OCLC web services, examples: WorldCatMetadataAPI, WMS_NCIP</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDebugTimestamp" name="method_setDebugTimestamp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDebugTimestamp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDebugTimestamp(string  <span class="argument">$timestamp</span>) </pre>
+                <p><em>Set a timestamp for debugging</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$timestamp </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setDebugNonce" name="method_setDebugNonce" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setDebugNonce()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setDebugNonce(string  <span class="argument">$nonce</span>) </pre>
+                <p><em>Set a nonce for debugging</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$nonce </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSignedRequest" name="method_getSignedRequest" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSignedRequest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSignedRequest() : string</pre>
+                <p><em>getSignedRequest
+Get a signed request</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>of signed request</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLoginURL" name="method_getLoginURL" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLoginURL()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLoginURL(integer  <span class="argument">$authenticating_institution_id = null</span>, integer  <span class="argument">$context_institution_id = null</span>) : string</pre>
+                <p><em>Return the login URL used with OCLC&#039;s OAuth 2 implementation of the Explicit Authorization Flow.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$authenticating_institution_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$context_institution_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The Login URL used with OCLC's OAuth 2 implementation of the Explicit Authorization Flow</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href="http://www.oclc.org/developer/platform/explicit-authorization-code"><span class="namespace-wrapper">Explicit Auth Documentation on the OCLC Developer Network.</span></a></dd>
+                                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAccessTokenWithAuthCode" name="method_getAccessTokenWithAuthCode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAccessTokenWithAuthCode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAccessTokenWithAuthCode(string  <span class="argument">$authCode</span>, integer  <span class="argument">$authenticatingInstitutionId</span>, integer  <span class="argument">$contextInstitutionId</span>) : \OCLC\Auth\OCLC/Auth/AccessToken</pre>
+                <p><em>Returns an OCLC/Auth/AccessToken object</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$authCode </td>
+                                <td><p>authorization code returned as a query parameter</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$authenticatingInstitutionId </td>
+                                <td><p>the WorldCat Registry ID of the institution that will login the user</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$contextInstitutionId </td>
+                                <td><p>the WorldCat Registry ID of the institution whose data will be accessed</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \OCLC\Auth\OCLC/Auth/AccessToken
+                                            &mdash; <p>Returns an /OCLC/Auth/AccessToken object when given</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAccessTokenWithClientCredentials" name="method_getAccessTokenWithClientCredentials" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAccessTokenWithClientCredentials()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAccessTokenWithClientCredentials(integer  <span class="argument">$authenticatingInstitutionId</span>, integer  <span class="argument">$contextInstitutionId</span>, \OCLC\Auth\OCLC/User  <span class="argument">$user = null</span>) : \OCLC\Auth\OCLC/Auth/AccessToken</pre>
+                <p><em>Returns an OCLC/Auth/AccessToken object</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$authenticatingInstitutionId </td>
+                                <td><p>the WorldCat Registry ID of the institution that will login the user</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$contextInstitutionId </td>
+                                <td><p>the WorldCat Registry ID of the institution whose data will be accessed</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\OCLC\Auth\OCLC/User</td>
+                                <td>$user </td>
+                                <td><p>an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \OCLC\Auth\OCLC/Auth/AccessToken
+                                            &mdash; <p>Returns an /OCLC/Auth/AccessToken object when given</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getHMACSignature" name="method_getHMACSignature" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getHMACSignature()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getHMACSignature(string  <span class="argument">$method</span>, string  <span class="argument">$request_url</span>, array  <span class="argument">$options = null</span>) : string</pre>
+                <p><em>Generates a digital signature for a given request according to the OAuth HMAC specification</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$method </td>
+                                <td><p>the HTTP method, GET, POST, PUT, DELETE</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$request_url </td>
+                                <td><p>the URL the request will be made to</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$options </td>
+                                <td><ul>
+<li>User - OCLC/User User an /OCLC/User object which contains a valid principalID, principalIDNS and insitution ID for a user
+<ul>
+<li>BodyHash - bodyHash of the request this is optional</li>
+<li>AuthParams - an array of Authentication name/value pairs example username/testuser</li>
+</ul></li>
+</ul></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The HMAC Signature that should be sent in the Authorization Header</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAccessToken" name="method_getAccessToken" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">getAccessToken()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAccessToken(string  <span class="argument">$grant_type</span>, array  <span class="argument">$options</span>, \OCLC\Auth\OCLC/User  <span class="argument">$user = null</span>) </pre>
+                <p><em>Get an Access Token</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$grant_type </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$options </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\OCLC\Auth\OCLC/User</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_signRequest" name="method_signRequest" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">signRequest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">signRequest(string  <span class="argument">$key</span>, string  <span class="argument">$secret</span>, string  <span class="argument">$method</span>, string  <span class="argument">$request_url</span>, string  <span class="argument">$bodyHash</span>, string  <span class="argument">$timestamp</span>, string  <span class="argument">$nonce</span>) : string</pre>
+                <p><em>Create a Signature for a request using</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$secret </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$method </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$request_url </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$bodyHash </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$timestamp </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$nonce </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_normalizeRequest" name="method_normalizeRequest" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">normalizeRequest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">normalizeRequest(string  <span class="argument">$key</span>, string  <span class="argument">$method</span>, string  <span class="argument">$request_url</span>, string  <span class="argument">$bodyHash</span>, string  <span class="argument">$timestamp</span>, string  <span class="argument">$nonce</span>) : string</pre>
+                <p><em>Normalize the Request by breaking apart the URL</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$method </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$request_url </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$bodyHash </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$timestamp </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$nonce </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_AddAuthParams" name="method_AddAuthParams" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">AddAuthParams()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">AddAuthParams(\OCLC\Auth\OCLC/User  <span class="argument">$user</span>, array  <span class="argument">$authParams</span>) : string</pre>
+                <p><em>Add the PrincipalID, PrincipalIDNS and any other Authentication Parameters to the Authorization Header</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\OCLC\Auth\OCLC/User</td>
+                                <td>$user </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$authParams </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">WSKey.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Auth/WSKey.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/OCLC.html">\OCLC</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on April 18th, 2017 at 20:42.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
