@@ -134,7 +134,7 @@ class WSKey
      * an array of Authentication name/value pairs example username/testuser
      * @var array $authParams
      */
-    private $authParams = null;
+    private $authParams = [];
     
     /**
      * The signed request
@@ -479,7 +479,7 @@ class WSKey
      */
     private static function AddAuthParams($user, $authParams)
     {
-        $authValuePairs = [];
+        $authValuePairs = null;
         if (count($authParams) > 0 || ! empty($user)) {
             if (empty($authParams)) {
                 $authParams = array();
