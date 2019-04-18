@@ -243,7 +243,7 @@ This example reads a bibliographic record from the WorldCat Metadata API using t
           ]]
       );
       $headers = array();
-      $headers['Authorization'] = 'Bearer ' . $accessToken->getValue() . ', principalID="' . $user->getPrincipalID() .'", principalIDNS="' . $user->getPrincipalIDNS . '"';
+      $headers['Authorization'] = 'Bearer ' . $accessToken->getValue();
       try {
          $response = $client->request('GET', $url, ['headers' => $headers]);
          echo $response->getBody(TRUE);
