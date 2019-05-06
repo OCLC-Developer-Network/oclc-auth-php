@@ -108,7 +108,7 @@ This example shows how to login a user and return the Access Token associated wi
     
    $key = 'api-key';
    $secret = 'api-key-secret';
-   $services = array('WMS_NCIP', 'WMS_ACQ');
+   $services = array('WMS_NCIP', 'WMS_ACQ', 'refresh_token');
    if (isset($_SERVER['HTTPS'])):
       $redirect_uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
    else:
@@ -123,6 +123,7 @@ This example shows how to login a user and return the Access Token associated wi
    if (empty($_SESSION['AccessToken']) && empty($_GET['code'])) {
       header("Location: " . $wskey->getLoginURL(128807, 128807), 'true', '303');
    } elseif (isset($_GET['code'])) {
+      // returns an Access Token object with a refresh token object embedded.
       $accessToken = $wskey->getAccessTokenWithAuthCode($_GET['code'], 128807, 128807);
     
       $_SESSION['AccessToken'] = $accessToken->getValue();
