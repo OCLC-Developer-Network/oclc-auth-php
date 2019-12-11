@@ -1,5 +1,7 @@
 OCLC PHP Auth Library
 =============
+> **WARNING**: This library is being sunset. Please use a standard OAuth 2.0 client. See https://github.com/OCLC-Developer-Network/gists/tree/master/php for example usage
+
 This library is a php wrapper around the Web Service Authentication system used by OCLC web services. 
 
 ## Installation
